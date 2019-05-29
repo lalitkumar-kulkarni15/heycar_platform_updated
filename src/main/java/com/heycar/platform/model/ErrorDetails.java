@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public class ErrorDetails {
 
-        private LocalDate timestamp;
+       // private LocalDate timestamp;
 
         private String message;
 
@@ -13,13 +13,13 @@ public class ErrorDetails {
         public ErrorDetails() {
         }
 
-        public LocalDate getTimestamp() {
-            return timestamp;
-        }
+       // public LocalDate getTimestamp() {
+       //     return timestamp;
+       // }
 
-        public void setTimestamp(LocalDate timestamp) {
-            this.timestamp = timestamp;
-        }
+       // public void setTimestamp(LocalDate timestamp) {
+       //     this.timestamp = timestamp;
+       // }
 
         public String getMessage() {
             return message;
@@ -39,7 +39,7 @@ public class ErrorDetails {
 
         public ErrorDetails(LocalDate timestamp, String message, String details) {
             super();
-            this.timestamp = timestamp;
+           // this.timestamp = timestamp;
             this.message = message;
             this.details = details;
         }

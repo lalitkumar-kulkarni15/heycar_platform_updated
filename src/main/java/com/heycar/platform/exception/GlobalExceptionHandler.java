@@ -87,7 +87,7 @@ public class GlobalExceptionHandler {
         if(ex.getCause() instanceof CsvRequiredFieldEmptyException){
 
             CsvRequiredFieldEmptyException csvExp = (CsvRequiredFieldEmptyException) ex.getCause();
-            String exceptionDtls = csvExp.getMessage().concat(" ").concat(" at line number "+csvExp.getLineNumber()+ " in the csv filw.");
+            String exceptionDtls = csvExp.getMessage().concat(" ").concat(" at line number "+csvExp.getLineNumber()+ " in the csv file.");
             ErrorDetails errorDetails = new ErrorDetails(LocalDate.now(),exceptionDtls, request.getDescription(false));
             return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
         }
