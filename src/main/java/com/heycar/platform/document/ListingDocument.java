@@ -9,9 +9,11 @@ public class ListingDocument {
     public ListingDocument() {
     }
 
-    public ListingDocument(String dealerIdCode,String dealerId, String code, String make, String model, String kW, String year, String color, String price) {
+    public ListingDocument(String dealerIdCode,String dealerId, String code, String make, String model, String kW,
+                           String year, String color, String price) {
 
         this.dealerIdCode = dealerIdCode;
+        this.dealerId = dealerId;
         this.code = code;
         this.make = make;
         this.model = model;

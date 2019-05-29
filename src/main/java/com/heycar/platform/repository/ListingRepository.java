@@ -3,7 +3,6 @@ package com.heycar.platform.repository;
 import com.heycar.platform.document.ListingDocument;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
 
 @Repository

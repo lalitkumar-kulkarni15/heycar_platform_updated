@@ -1,9 +1,25 @@
 package com.heycar.platform.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.opencsv.bean.CsvBindByName;
 import javax.validation.constraints.NotNull;
 
 public class VendorListing {
+
+    public VendorListing() {
+    }
+
+    public VendorListing(String code, String year, String color, String price, String make, String makeModel,
+                         String model, String kW) {
+        this.code = code;
+        this.year = year;
+        this.color = color;
+        this.price = price;
+        this.make = make;
+        this.makeModel = makeModel;
+        this.model = model;
+        this.kW = kW;
+    }
 
     @NotNull(message = "Code cannot be null")
     @CsvBindByName(column = "code",required = true)
@@ -25,6 +41,7 @@ public class VendorListing {
     private String make;
 
     @CsvBindByName(column = "make/model",required = true)
+    @JsonIgnore
     private String makeModel;
 
     @NotNull(message = "Model cannot be null")
@@ -44,7 +61,6 @@ public class VendorListing {
 
     public void setMakeModel(String makeModel) {
 
-        System.out.println("Make model setter called.");
         if (null != makeModel) {
             this.make = makeModel.split("/")[0];
         }

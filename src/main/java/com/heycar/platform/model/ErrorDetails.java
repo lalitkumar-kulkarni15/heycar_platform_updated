@@ -11,7 +11,6 @@ public class ErrorDetails {
         private String details;
 
         public ErrorDetails() {
-
         }
 
         public LocalDate getTimestamp() {
