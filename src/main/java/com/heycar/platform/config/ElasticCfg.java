@@ -14,7 +14,6 @@ import java.io.IOException;
 @EnableElasticsearchRepositories(basePackages = "com.techprimers.elastic.repository")
 public class ElasticCfg {
 
-
     @Bean
     public NodeBuilder nodeBuilder() {
         return new NodeBuilder();
@@ -23,7 +22,6 @@ public class ElasticCfg {
     @Bean
     public ElasticsearchOperations elasticsearchTemplate() throws IOException {
         File tmpDir = File.createTempFile("elastic", Long.toString(System.nanoTime()));
-        System.out.println("Temp directory: " + tmpDir.getAbsolutePath());
         Settings.Builder elasticsearchSettings =
                 Settings.settingsBuilder()
                         .put("http.enabled", "true") // 1

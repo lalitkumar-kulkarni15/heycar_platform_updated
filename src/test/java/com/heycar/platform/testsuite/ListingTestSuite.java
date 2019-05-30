@@ -1,5 +1,6 @@
 package com.heycar.platform.testsuite;
 
+import com.heycar.platform.controller.ListingControllerCsvUnitTest;
 import com.heycar.platform.controller.ListingControllerIntJsonTest;
 import com.heycar.platform.controller.ListingControllerIntCsvTest;
 import com.heycar.platform.controller.ListingControllerJsonUnitTest;
@@ -12,7 +13,9 @@ import org.junit.runners.Suite;
         ListingControllerIntJsonTest.class,
         ListingControllerIntCsvTest.class,
         ListingControllerJsonUnitTest.class,
-        ListingSvcImplUnitTest.class
+        ListingSvcImplUnitTest.class,
+        ListingControllerCsvUnitTest.class
+
 })
 public class ListingTestSuite {
 }

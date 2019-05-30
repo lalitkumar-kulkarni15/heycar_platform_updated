@@ -45,10 +45,10 @@ public class ListingController {
     private IListingSvc listingSvc;
 
     // Exception messages which are used for throwing the exceptions.
-    private final String DEALER_ID_NULL_MSG = "Dealer id is null as input in upload dListingCsv";
-    private final String LISTING_OBJECT_NULL_MSG = "Listing object in uploadListingCsv is null";
-    private final String LISTING_LIST_OBJECT_NULL_MSG = "List inside listing object in uploadListingCsv is null";
-    private final String LISTING_OBJECT_NULL_SRCH_LSTNG_MSG = "Input search object is null in searchListing()";
+    private static final String DEALER_ID_NULL_MSG = "Dealer id is null as input in upload dListingCsv";
+    private static final String LISTING_OBJECT_NULL_MSG = "Listing object in uploadListingCsv is null";
+    private static final String LISTING_LIST_OBJECT_NULL_MSG = "List inside listing object in uploadListingCsv is null";
+    private static final String LISTING_OBJECT_NULL_SRCH_LSTNG_MSG = "Input search object is null in searchListing()";
 
     /**
      * <p>This method saves the given vehicle listings data in the csv format into the data store.</p>
@@ -74,12 +74,9 @@ public class ListingController {
                                         ListingProcessingException {
 
         logger.info("Inserting new listing with dealer Id : " + dealerId);
-        // Input data validations
         validateListingReqCsv(dealerId, listing);
-        // Insert listing to data store.
         final List<ListingDocument> listingDocument = this.listingSvc.addListingInDataStore(dealerId, listing.getList());
         logger.info("Listing inserted successfully");
-        // Populate response headers
         HttpHeaders headers = getHttpHeaders(request, listingDocument);
         return new ResponseEntity(headers, HttpStatus.CREATED);
     }
@@ -139,12 +136,9 @@ public class ListingController {
             InvalidInputDataException, ListingProcessingException {
 
         logger.info("Inserting new listing with dealer Id : "+dealerId+ " and listing : "+listing.toString());
-        // Input data validations
         validateListingReqJson(dealerId, listing);
-        // Insert listing to data store.
         final List<ListingDocument> listingDocument = this.listingSvc.addListingInDataStore(dealerId, listing);
         logger.info("Listing inserted successfully");
-        // Populate response headers
         HttpHeaders headers = getHttpHeaders(request, listingDocument);
         return new ResponseEntity(headers,HttpStatus.CREATED);
 
@@ -177,7 +171,7 @@ public class ListingController {
      *  </ul>
      * </p>
      *
-     * @param   allParams           This object contains the search parameters on the basis of which the vehicle listings
+     * @param   allParams                 This object contains the search parameters on the basis of which the vehicle listings
      *                                    would be searched.
      * @return                            {@link ResponseEntity<List<ListingDocument>>}
      * @throws  InvalidInputDataException This exception is thrown if the search params are null.
@@ -186,9 +180,7 @@ public class ListingController {
     public ResponseEntity<List<VendorListing>> searchListingByParams(@RequestParam Map<String,String> allParams)
             throws InvalidInputDataException, ListingProcessingException {
 
-        // Validate input request.
         Optional.ofNullable(allParams).orElseThrow(()-> new InvalidInputDataException(LISTING_OBJECT_NULL_SRCH_LSTNG_MSG));
-        // Search the listing based on the input criteria.
         List<VendorListing> listingDoc = this.listingSvc.searchListing(mapVendorListingReq(allParams));
         return ResponseEntity.ok(listingDoc);
     }

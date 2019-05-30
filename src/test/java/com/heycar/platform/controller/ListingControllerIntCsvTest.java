@@ -5,18 +5,18 @@ import com.heycar.platform.converter.CsvHttpMessageConverter;
 import com.heycar.platform.model.ListingList;
 import com.heycar.platform.model.VendorListing;
 import com.heycar.platform.utils.ITestUtils;
-import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
+import org.json.JSONException;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
 import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.HttpMessageNotWritableException;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -24,6 +24,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import static com.heycar.platform.constants.IVehicleListingConstants.HEADER_ACCEPT;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
@@ -53,6 +54,27 @@ public class ListingControllerIntCsvTest {
 
     private HttpHeaders httpHeaders;
 
+    @Test
+    public void uploadListingCsvTest_Returns201Created_ForPositiveCsvListing() {
+
+        ResponseEntity response = uploadCsvAndGetResponseEntity();
+        Assert.assertNotNull(response);
+        Assert.assertEquals(HttpStatus.CREATED,response.getStatusCode());
+
+    }
+
+    private ResponseEntity uploadCsvAndGetResponseEntity() {
+
+        HttpEntity<ListingList> listingDocEnt = new HttpEntity<ListingList>(createTestDataForNewVehicleListingPositiveCsv(),
+                getHttpHeaderCsv());
+
+        List<HttpMessageConverter<?>> csvMessgeConverter = new ArrayList<>();
+        csvMessgeConverter.add(new CsvHttpMessageConverter<>());
+        restTemplate.getRestTemplate().setMessageConverters(csvMessgeConverter);
+        return restTemplate.exchange(ITestUtils.createURLWithPort(postUrlCsv,
+                host,port ), HttpMethod.POST,listingDocEnt, String.class);
+    }
+
     /**
      * <p>This test case invokes the search all api and verifies :- </p>
      * <ul>
@@ -64,6 +86,9 @@ public class ListingControllerIntCsvTest {
      */
     @Test
     public void searchAllTest_Returns200OK_WithValidDataInserted(){
+
+        // Create test data.
+        uploadCsvAndGetResponseEntity();
 
         TestRestTemplate restTemplate = new TestRestTemplate();
 
@@ -87,10 +112,13 @@ public class ListingControllerIntCsvTest {
     }
 
     @Test
-    public void searchTest_Returns200OK_WhenSearchedByColor(){
+    public void searchTest_Returns200OK_WhenSearchedByColor() throws JSONException {
+
+        // Create test data.
+        uploadCsvAndGetResponseEntity();
 
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+        headers.set(HEADER_ACCEPT, MediaType.APPLICATION_JSON_VALUE);
 
         HttpEntity<?> entity = new HttpEntity<>(headers);
         TestRestTemplate restTemplate = new TestRestTemplate();
@@ -104,13 +132,18 @@ public class ListingControllerIntCsvTest {
 
         Assert.assertNotNull(responseListings.getBody());
         Assert.assertEquals(HttpStatus.OK,responseListings.getStatusCode());
+        JSONAssert.assertEquals("[{\"code\":\"ba\",\"year\":\"1989\",\"color\":\"Blue\",\"price\":\"269 $\"," +
+                "\"make\":\"Mercedes\",\"model\":\"X1\",\"kW\":\"2000\"}]",responseListings.getBody(), JSONCompareMode.LENIENT);
     }
 
     @Test
-    public void searchTest_Returns200OK_WhenSearchedByColorMakeModelYear(){
+    public void searchTest_Returns200OK_WhenSearchedByColorMakeModelYear() throws JSONException {
+
+        // Create test data.
+        uploadCsvAndGetResponseEntity();
 
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+        headers.set(HEADER_ACCEPT, MediaType.APPLICATION_JSON_VALUE);
 
         HttpEntity<?> entity = new HttpEntity<>(headers);
 
@@ -122,6 +155,35 @@ public class ListingControllerIntCsvTest {
                            .queryParam("model","Swift")
                            .queryParam("year","1987");
 
+        ResponseEntity<String> responseListings = restTemplate.exchange
+                (builder.toUriString(),HttpMethod.GET,entity,String.class);
+
+        // Verify basic assertions
+        Assert.assertNotNull(responseListings.getBody());
+        Assert.assertFalse(responseListings.getBody().isEmpty());
+        Assert.assertEquals(HttpStatus.OK,responseListings.getStatusCode());
+        JSONAssert.assertEquals("[{\"code\":\"adp\",\"year\":\"1987\",\"color\":\"White\",\"price\":\"269 $\"," +
+                "\"make\":\"Maruti\",\"model\":\"Swift\",\"kW\":\"2000\"}]",responseListings.getBody(),JSONCompareMode.LENIENT);
+
+    }
+
+    @Test
+    public void searchTest_Returns200OK_WhenSearchedByColorMakeYear() throws JSONException {
+
+        // Create test data.
+        uploadCsvAndGetResponseEntity();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(HEADER_ACCEPT, MediaType.APPLICATION_JSON_VALUE);
+
+        HttpEntity<?> entity = new HttpEntity<>(headers);
+
+        TestRestTemplate restTemplate = new TestRestTemplate();
+
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(ITestUtils.createURLWithPort("/heycar/searchByParam",
+                host,port)).queryParam("color", "White")
+                .queryParam("make","Maruti")
+                .queryParam("year","1987");
 
         ResponseEntity<String> responseListings = restTemplate.exchange
                 (builder.toUriString(),HttpMethod.GET,entity,String.class);
@@ -130,25 +192,36 @@ public class ListingControllerIntCsvTest {
         Assert.assertNotNull(responseListings.getBody());
         Assert.assertFalse(responseListings.getBody().isEmpty());
         Assert.assertEquals(HttpStatus.OK,responseListings.getStatusCode());
+        JSONAssert.assertEquals("[{\"code\":\"adp\",\"year\":\"1987\",\"color\":\"White\",\"price\":\"269 $\"," +
+                "\"make\":\"Maruti\",\"model\":\"Swift\",\"kW\":\"2000\"}]",responseListings.getBody(),JSONCompareMode.LENIENT);
 
     }
 
     @Test
-    public void uploadListingCsvTest_Returns201Created_ForPositiveCsvListing() {
+    public void searchTest_Returns200OK_WhenSearchedByYear() throws JSONException {
 
-        // Step 1 : Create the Http entity object which contains the request body and headers.
-        HttpEntity<ListingList> listingDocEnt = new HttpEntity<ListingList>(createTestDataForNewVehicleListingPositiveCsv(),
-                getHttpHeaderCsv());
+        // Create test data.
+        uploadCsvAndGetResponseEntity();
 
-        List<HttpMessageConverter<?>> csvMessgeonverter = new ArrayList<>();
-        csvMessgeonverter.add(new CsvHttpMessageConverter<>());
-        restTemplate.getRestTemplate().setMessageConverters(csvMessgeonverter);
-        ResponseEntity response = restTemplate.exchange(ITestUtils.createURLWithPort(postUrlCsv,
-                host,port ), HttpMethod.POST,listingDocEnt, String.class);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(HEADER_ACCEPT, MediaType.APPLICATION_JSON_VALUE);
 
-        // Check if the response is not null and the http status code is - 201 Created.
-        Assert.assertNotNull(response);
-        Assert.assertEquals(HttpStatus.CREATED,response.getStatusCode());
+        HttpEntity<?> entity = new HttpEntity<>(headers);
+
+        TestRestTemplate restTemplate = new TestRestTemplate();
+
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(ITestUtils.createURLWithPort("/heycar/searchByParam",
+                host,port)).queryParam("year","1987");
+
+        ResponseEntity<String> responseListings = restTemplate.exchange
+                (builder.toUriString(),HttpMethod.GET,entity,String.class);
+
+        // Verify basic assertions
+        Assert.assertNotNull(responseListings.getBody());
+        Assert.assertFalse(responseListings.getBody().isEmpty());
+        Assert.assertEquals(HttpStatus.OK,responseListings.getStatusCode());
+        JSONAssert.assertEquals("[{\"code\":\"adp\",\"year\":\"1987\",\"color\":\"White\",\"price\":\"269 $\"," +
+                "\"make\":\"Maruti\",\"model\":\"Swift\",\"kW\":\"2000\"}]",responseListings.getBody(),JSONCompareMode.LENIENT);
 
     }
 
@@ -165,66 +238,6 @@ public class ListingControllerIntCsvTest {
         VendorListing vendorListing = new VendorListing();
         vendorListing.setYear("1987");
         vendorListing.setCode("adp");
-        vendorListing.setColor("White");
-        vendorListing.setkW("2000");
-        vendorListing.setMakeModel("Maruti/Swift");
-        vendorListing.setPrice("269 $");
-        List<VendorListing> listingDocList = new ArrayList<>();
-        listingDocList.add(vendorListing);
-        ListingList listingList = new ListingList();
-        listingList.setList(listingDocList);
-        return listingList;
-    }
-
-    //@Test(expected = HttpMessageNotWritableException.class)
-    @Test
-    public void uploadListingCsvTest_ReturnsBadReq_WhenCodeMissing() throws HttpMessageNotWritableException {
-
-        // Step 1 : Create the Http entity object which contains the request body and headers.
-        HttpEntity<ListingList> listingDocEnt = new HttpEntity<ListingList>(createTestDataForNewVehicleListingCodeMissing(),
-                getHttpHeaderCsv());
-
-        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-        converter.setSupportedMediaTypes(Collections.singletonList(MediaType.APPLICATION_JSON));
-
-        TestRestTemplate restTemplate = getRestTemplateWithConvrtrs(converter);
-        ResponseEntity<?> response = null;
-        invokeApiAndAssertResp(listingDocEnt, restTemplate);
-    }
-
-    private void invokeApiAndAssertResp(HttpEntity<ListingList> listingDocEnt, TestRestTemplate restTemplate) {
-        ResponseEntity<?> response;
-        try {
-             response = restTemplate.exchange(ITestUtils.createURLWithPort(postUrlCsv,
-                    host, port), HttpMethod.POST, listingDocEnt, String.class);
-        } catch(HttpMessageNotWritableException ex){
-            assertException(ex);
-        }
-    }
-
-    private TestRestTemplate getRestTemplateWithConvrtrs(MappingJackson2HttpMessageConverter converter) {
-        List<HttpMessageConverter<?>> csvMessgeonverter = new ArrayList<>();
-        csvMessgeonverter.add(new CsvHttpMessageConverter<>());
-        csvMessgeonverter.add(converter);
-        TestRestTemplate restTemplate = new TestRestTemplate();
-        restTemplate.getRestTemplate().setMessageConverters(csvMessgeonverter);
-        return restTemplate;
-    }
-
-    private void assertException(HttpMessageNotWritableException ex) {
-        if(ex.getCause() instanceof CsvRequiredFieldEmptyException){
-            CsvRequiredFieldEmptyException csvExp = (CsvRequiredFieldEmptyException) ex.getCause();
-            String msg = csvExp.getMessage();
-            Assert.assertEquals("Field 'code' is mandatory but no value was provided.",msg);
-        } else {
-            Assert.fail();
-        }
-    }
-
-    private ListingList createTestDataForNewVehicleListingCodeMissing(){
-
-        VendorListing vendorListing = new VendorListing();
-        vendorListing.setYear("1987");
         vendorListing.setColor("White");
         vendorListing.setkW("2000");
         vendorListing.setMakeModel("Maruti/Swift");

@@ -106,6 +106,14 @@ public class ListingDocument {
         this.price = price;
     }
 
+    public String getDealerId() {
+        return dealerId;
+    }
+
+    public void setDealerId(String dealerId) {
+        this.dealerId = dealerId;
+    }
+
     public ListingDocument(String dealerId) {
         this.dealerId = dealerId;
     }

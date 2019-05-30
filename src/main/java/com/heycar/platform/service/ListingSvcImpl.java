@@ -35,15 +35,18 @@ public class ListingSvcImpl implements IListingSvc {
     private ListingRepository listingRepository;
 
     // Exception messages.
-    private final String INSERTION_FAILED_MSG = "Failed while inserting the vendor listing in the data store.";
-    private final String SEARCHING_FAILED_MSG = "Failed while searching the vendor listing from the data store.";
+    private static final String INSERTION_FAILED_MSG = "Failed while inserting the vendor listing in the data store.";
+    private static final String SEARCHING_FAILED_MSG = "Failed while searching the vendor listing from the data store.";
 
     @Override
     @Transactional
     public List<ListingDocument> addListingInDataStore(final String dealerId, final List<VendorListing> listing)
             throws ListingProcessingException {
 
+        logger.info("Entering addListingInDataStore()");
+
         try{
+
             final List<ListingDocument> listingDocument = mapListingDocumentRequest(dealerId, listing);
             operations.putMapping(ListingDocument.class);
             listingRepository.save(listingDocument);
@@ -106,8 +109,8 @@ public class ListingSvcImpl implements IListingSvc {
             Iterable<ListingDocument> listingDoc = this.listingRepository.findAll();
             List<ListingDocument> list = new ArrayList<>();
             listingDoc.forEach(list::add);
-            List<VendorListing> vendorListing = getVendorListingList(list);
-            return vendorListing;
+            return getVendorListingList(list);
+
         } catch(Exception exception){
             throw new ListingProcessingException(SEARCHING_FAILED_MSG,exception);
         }
