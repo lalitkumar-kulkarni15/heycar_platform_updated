@@ -1,6 +1,5 @@
 package com.heycar.platform.converter;
 
-import com.heycar.platform.exception.CsvValidationException;
 import com.heycar.platform.model.ListParam;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
@@ -16,9 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.AbstractHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
-import org.springframework.validation.annotation.Validated;
-
-import javax.validation.Valid;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -26,7 +22,6 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.List;
 
-//@Validated
 public class CsvHttpMessageConverter<T, L extends ListParam<T>>
           extends AbstractHttpMessageConverter<L> {
     
@@ -38,10 +33,12 @@ public class CsvHttpMessageConverter<T, L extends ListParam<T>>
     protected boolean supports (Class<?> clazz) {
         return ListParam.class.isAssignableFrom(clazz);
     }
+
+    private static final String CSV_PARSING_EXCEPTION_MSG = "Exception while parsing the CSV file.";
     
     @Override
     protected L readInternal (Class<? extends L> clazz,HttpInputMessage inputMessage)
-              throws IOException, HttpMessageNotReadableException {
+              throws IOException {
 
         HeaderColumnNameMappingStrategy<T> strategy = new HeaderColumnNameMappingStrategy<>();
         Class<T> t = toBeanType(clazz.getGenericSuperclass());
@@ -54,24 +51,18 @@ public class CsvHttpMessageConverter<T, L extends ListParam<T>>
 
         try {
             beanList = csvToBean.parse(strategy, csv);
-
+            L cls = clazz.newInstance();
+            cls.setList(beanList);
+            return cls;
         } catch(Exception exception){
-            throw new HttpMessageNotReadableException("Exception while parsing the CSV file.",exception.getCause());
-        }
-
-        try {
-            L l = clazz.newInstance();
-            l.setList(beanList);
-            return l;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new HttpMessageNotReadableException(CSV_PARSING_EXCEPTION_MSG,exception.getCause());
         }
     }
 
     @SuppressWarnings("unchecked")
     @Override
     protected void writeInternal (L l, HttpOutputMessage outputMessage)
-              throws IOException, HttpMessageNotWritableException {
+              throws IOException {
 
         HeaderColumnNameMappingStrategy<T> strategy = new HeaderColumnNameMappingStrategy<>();
         strategy.setType(toBeanType(l.getClass().getGenericSuperclass()));
@@ -85,11 +76,10 @@ public class CsvHttpMessageConverter<T, L extends ListParam<T>>
 
             try {
                 beanToCsv.write(l.getList());
-            } catch (CsvDataTypeMismatchException e) {
-                throw new HttpMessageNotWritableException("Exception while parsing the CSV file.",e);
-            } catch (CsvRequiredFieldEmptyException e) {
-                throw new HttpMessageNotWritableException("Exception while parsing the CSV file.",e);
+            } catch (CsvDataTypeMismatchException | CsvRequiredFieldEmptyException e) {
+                throw new HttpMessageNotWritableException(CSV_PARSING_EXCEPTION_MSG,e);
             }
+
             outputStream.close();
 
     }

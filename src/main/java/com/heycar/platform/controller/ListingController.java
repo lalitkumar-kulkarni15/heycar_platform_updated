@@ -10,8 +10,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -39,15 +37,10 @@ import java.util.Optional;
 @Api(tags = "Vehicle listing API", value = "This API houses all the endpoints for adding/modifying/searching listing of vehicles.")
 public class ListingController {
 
-    Logger logger = LoggerFactory.getLogger(ListingController.class);
-
     @Autowired
     private IListingSvc listingSvc;
 
     // Exception messages which are used for throwing the exceptions.
-    private static final String DEALER_ID_NULL_MSG = "Dealer id is null as input in upload dListingCsv";
-    private static final String LISTING_OBJECT_NULL_MSG = "Listing object in uploadListingCsv is null";
-    private static final String LISTING_LIST_OBJECT_NULL_MSG = "List inside listing object in uploadListingCsv is null";
     private static final String LISTING_OBJECT_NULL_SRCH_LSTNG_MSG = "Input search object is null in searchListing()";
 
     /**
@@ -70,33 +63,12 @@ public class ListingController {
     @ApiResponse(code = 400, message = "Bad input request.Please check the error description for more details.")
     @PostMapping(value = "/upload_csv/{dealer_id}",consumes = "text/csv",produces = "application/json")
     public ResponseEntity uploadListing(HttpServletRequest request,@PathVariable("dealer_id") String dealerId,
-                                        @RequestBody ListingList listing) throws InvalidInputDataException,
+                                        @RequestBody ListingList listing) throws
                                         ListingProcessingException {
 
-        logger.info("Inserting new listing with dealer Id : " + dealerId);
-        validateListingReqCsv(dealerId, listing);
         final List<ListingDocument> listingDocument = this.listingSvc.addListingInDataStore(dealerId, listing.getList());
-        logger.info("Listing inserted successfully");
         HttpHeaders headers = getHttpHeaders(request, listingDocument);
         return new ResponseEntity(headers, HttpStatus.CREATED);
-    }
-
-    /**
-     * <p>This method validates the input request parameters - dealer id and listing list. for posting the
-     * listing to the dta store. for listings that are posted by the dealers in the csv format.</p>
-     *
-     * @param dealerId                   This is the dealer id of the dealer who is uploading the vehicle listings.
-     * @param listing                    This is the list of vehicle listing object which contains the properties
-     *                                   specific to the vehicle that needs to be posted to the platform by the dealers.
-     *                                   {@link VendorListing}
-     * @throws InvalidInputDataException This exception is thrown if any of the input validations fail.
-     */
-    private void validateListingReqCsv(@PathVariable("dealer_id") String dealerId, @RequestBody ListingList listing)
-            throws InvalidInputDataException {
-
-        Optional.ofNullable(dealerId).orElseThrow(() -> new InvalidInputDataException(DEALER_ID_NULL_MSG));
-        Optional.ofNullable(listing).orElseThrow(() -> new InvalidInputDataException(LISTING_OBJECT_NULL_MSG));
-        Optional.ofNullable(listing.getList()).orElseThrow(() -> new InvalidInputDataException(LISTING_LIST_OBJECT_NULL_MSG));
     }
 
     /**
@@ -133,32 +105,12 @@ public class ListingController {
     @PostMapping(value = "/vehicle_listings/{dealer_id}",consumes = "application/json",produces = "application/json")
     public ResponseEntity uploadListing(HttpServletRequest request,@PathVariable("dealer_id") String dealerId,
                                      @Valid @RequestBody List<VendorListing> listing) throws URISyntaxException,
-            InvalidInputDataException, ListingProcessingException {
+                                     ListingProcessingException {
 
-        logger.info("Inserting new listing with dealer Id : "+dealerId+ " and listing : "+listing.toString());
-        validateListingReqJson(dealerId, listing);
         final List<ListingDocument> listingDocument = this.listingSvc.addListingInDataStore(dealerId, listing);
-        logger.info("Listing inserted successfully");
         HttpHeaders headers = getHttpHeaders(request, listingDocument);
         return new ResponseEntity(headers,HttpStatus.CREATED);
 
-    }
-
-    /**
-     * <p>This method validates the input request parameters - dealer id and listing list. for posting the
-     * listing to the data store for listings that are posted by the dealers in the Json format.</p>
-     *
-     * @param dealerId                   This is the dealer id of the dealer who is uploading the vehicle listings.
-     * @param listing                    This is the list of vehicle listing object which contains the properties
-     *                                   specific to the vehicle that needs to be posted to the platform by the dealers.
-     *                                   {@link VendorListing}
-     * @throws InvalidInputDataException This exception is thrown if any of the input validations fail.
-     */
-    private void validateListingReqJson(@PathVariable("dealer_id") String dealerId, @RequestBody @Valid List<VendorListing> listing)
-            throws InvalidInputDataException {
-
-        Optional.ofNullable(dealerId).orElseThrow(() -> new InvalidInputDataException(DEALER_ID_NULL_MSG));
-        Optional.ofNullable(listing).orElseThrow(() -> new InvalidInputDataException(LISTING_OBJECT_NULL_MSG));
     }
 
     /**
@@ -180,8 +132,8 @@ public class ListingController {
     public ResponseEntity<List<VendorListing>> searchListingByParams(@RequestParam Map<String,String> allParams)
             throws InvalidInputDataException, ListingProcessingException {
 
-        Optional.ofNullable(allParams).orElseThrow(()-> new InvalidInputDataException(LISTING_OBJECT_NULL_SRCH_LSTNG_MSG));
-        List<VendorListing> listingDoc = this.listingSvc.searchListing(mapVendorListingReq(allParams));
+        List<VendorListing> listingDoc = this.listingSvc.searchListing(mapVendorListingReq(Optional.ofNullable(allParams)
+                                 .orElseThrow(()-> new InvalidInputDataException(LISTING_OBJECT_NULL_SRCH_LSTNG_MSG))));
         return ResponseEntity.ok(listingDoc);
     }
 

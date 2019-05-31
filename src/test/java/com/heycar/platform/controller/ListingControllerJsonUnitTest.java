@@ -145,7 +145,7 @@ public class ListingControllerJsonUnitTest {
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
         MockHttpServletResponse response = result.getResponse();
         Assert.assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
-        JSONAssert.assertEquals("{\"message\":\"Color cannot be null & \",\"details\":\"uri=/heycar/vehicle_listings/16\"}"
+        JSONAssert.assertEquals("{\"message\":\"Color cannot be null - \",\"details\":\"uri=/heycar/vehicle_listings/16\"}"
                 ,response.getContentAsString(),JSONCompareMode.LENIENT);
     }
 
@@ -173,7 +173,7 @@ public class ListingControllerJsonUnitTest {
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
         MockHttpServletResponse response = result.getResponse();
         Assert.assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
-        JSONAssert.assertEquals("{\"message\":\"Code cannot be null & \",\"details\":\"uri=/heycar/vehicle_listings/16\"}"
+        JSONAssert.assertEquals("{\"message\":\"Code cannot be null - \",\"details\":\"uri=/heycar/vehicle_listings/16\"}"
                 ,response.getContentAsString(),JSONCompareMode.LENIENT);
     }
 
@@ -201,7 +201,7 @@ public class ListingControllerJsonUnitTest {
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
         MockHttpServletResponse response = result.getResponse();
         Assert.assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
-        JSONAssert.assertEquals("{\"message\":\"Make cannot be null & \",\"details\":\"uri=/heycar/vehicle_listings/16\"}"
+        JSONAssert.assertEquals("{\"message\":\"Make cannot be null - \",\"details\":\"uri=/heycar/vehicle_listings/16\"}"
                 ,response.getContentAsString(),JSONCompareMode.LENIENT);
 
     }
@@ -230,7 +230,7 @@ public class ListingControllerJsonUnitTest {
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
         MockHttpServletResponse response = result.getResponse();
         Assert.assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
-        JSONAssert.assertEquals("{\"message\":\"Model cannot be null & \",\"details\":\"uri=/heycar/vehicle_listings/16\"}"
+        JSONAssert.assertEquals("{\"message\":\"Model cannot be null - \",\"details\":\"uri=/heycar/vehicle_listings/16\"}"
                 ,response.getContentAsString(),JSONCompareMode.LENIENT);
 
     }
@@ -259,7 +259,7 @@ public class ListingControllerJsonUnitTest {
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
         MockHttpServletResponse response = result.getResponse();
         Assert.assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
-        JSONAssert.assertEquals("{\"message\":\"Power cannot be null & \",\"details\":\"uri=/heycar/vehicle_listings/16\"}"
+        JSONAssert.assertEquals("{\"message\":\"Power cannot be null - \",\"details\":\"uri=/heycar/vehicle_listings/16\"}"
                 ,response.getContentAsString(),JSONCompareMode.LENIENT);
     }
 
@@ -288,7 +288,7 @@ public class ListingControllerJsonUnitTest {
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
         MockHttpServletResponse response = result.getResponse();
         Assert.assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
-        JSONAssert.assertEquals("{\"message\":\"Year cannot be null & \",\"details\":\"uri=/heycar/vehicle_listings/16\"}"
+        JSONAssert.assertEquals("{\"message\":\"Year cannot be null - \",\"details\":\"uri=/heycar/vehicle_listings/16\"}"
                 ,response.getContentAsString(),JSONCompareMode.LENIENT);
     }
 
