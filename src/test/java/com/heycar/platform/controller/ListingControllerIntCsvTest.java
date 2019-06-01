@@ -24,7 +24,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import static com.heycar.platform.constants.IVehicleListingConstants.HEADER_ACCEPT;
+import static com.heycar.platform.constants.VehicleListingConstants.HEADER_ACCEPT;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,

@@ -21,10 +21,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import static com.heycar.platform.constants.IVehicleListingConstants.MEDIA_TYP_TXT_CSV;
+import static com.heycar.platform.constants.VehicleListingConstants.MEDIA_TYP_TXT_CSV;
 import static org.mockito.Mockito.when;
+import static com.heycar.platform.utils.ITestUtils.readFileAsString;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(ListingController.class)
@@ -67,14 +70,10 @@ public class ListingControllerCsvUnitTest {
         return listingDocLst;
     }
 
-    private RequestBuilder getRequestBuilderForPostListingCsvCodeMissing() {
+    private RequestBuilder getRequestBuilderForPostListingCsvCodeMissing() throws IOException {
         return MockMvcRequestBuilders
                 .post(uploadListingCsvUrl)
-                .accept(MediaType.APPLICATION_JSON).content("code,make/model,power-in-ps,year,color,price\n" +
-                        ",Maruti/Suzuki,180,123,2014,black,15950\n" +
-                        "2,audi/a3,111,2016,white,17210\n" +
-                        "3,vw/golf,86,2018,green,14980\n" +
-                        "4,skoda/octavia,86,2018,blue,16990")
+                .accept(MediaType.APPLICATION_JSON).content(readFileAsString("CsvListingCodeMissing.csv"))
                 .contentType(MEDIA_TYP_TXT_CSV);
     }
 

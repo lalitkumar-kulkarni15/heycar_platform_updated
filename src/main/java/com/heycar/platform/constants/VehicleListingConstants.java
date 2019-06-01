@@ -1,6 +1,8 @@
 package com.heycar.platform.constants;
 
-public interface IVehicleListingConstants {
+public final class VehicleListingConstants {
+
+    private VehicleListingConstants(){}
 
     public static final String MEDIA_TYP_TXT_CSV = "text/csv";
 

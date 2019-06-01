@@ -5,7 +5,6 @@ import com.heycar.platform.exception.ListingProcessingException;
 import com.heycar.platform.model.VendorListing;
 import com.heycar.platform.repository.ListingRepository;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
