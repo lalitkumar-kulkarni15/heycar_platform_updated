@@ -124,7 +124,7 @@ public class ListingControllerIntCsvTest {
         TestRestTemplate restTemplate = new TestRestTemplate();
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(ITestUtils.createURLWithPort(searchByParam,
-                                       host,port)).queryParam("color", "Blue");
+                                       host,port)).queryParam("color", "White");
 
 
         ResponseEntity<String> responseListings = restTemplate.exchange
@@ -132,8 +132,8 @@ public class ListingControllerIntCsvTest {
 
         Assert.assertNotNull(responseListings.getBody());
         Assert.assertEquals(HttpStatus.OK,responseListings.getStatusCode());
-        JSONAssert.assertEquals("[{\"code\":\"ba\",\"year\":\"1989\",\"color\":\"Blue\",\"price\":\"269 $\"," +
-                "\"make\":\"Mercedes\",\"model\":\"X1\",\"kW\":\"2000\"}]",responseListings.getBody(), JSONCompareMode.LENIENT);
+        JSONAssert.assertEquals("[{\"code\":\"adp\",\"year\":\"1987\",\"color\":\"White\",\"price\":\"269 $\"" +
+                ",\"make\":\"Maruti\",\"model\":\"Swift\",\"kW\":\"2000\"}]",responseListings.getBody(), JSONCompareMode.LENIENT);
     }
 
     @Test
