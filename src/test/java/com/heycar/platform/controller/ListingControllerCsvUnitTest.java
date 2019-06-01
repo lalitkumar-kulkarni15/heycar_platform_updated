@@ -92,14 +92,10 @@ public class ListingControllerCsvUnitTest {
 
     }
 
-    private RequestBuilder getRequestBuilderForPostListingCsvPowerMissing() {
+    private RequestBuilder getRequestBuilderForPostListingCsvPowerMissing() throws IOException {
         return MockMvcRequestBuilders
                 .post(uploadListingCsvUrl)
-                .accept(MediaType.APPLICATION_JSON).content("code,make/model,power-in-ps,year,color,price\n" +
-                        "1,Maruti/Suzuki,180,123,2014,black,15950\n" +
-                        "2,audi/a3,,2016,white,17210\n" +
-                        "3,vw/golf,86,2018,green,14980\n" +
-                        "4,skoda/octavia,86,2018,blue,16990")
+                .accept(MediaType.APPLICATION_JSON).content(readFileAsString("CsvListingPowerMissing.csv"))
                 .contentType(MEDIA_TYP_TXT_CSV);
     }
 
@@ -119,14 +115,10 @@ public class ListingControllerCsvUnitTest {
 
     }
 
-    private RequestBuilder getRequestBuilderForPostListingCsvYearMissing() {
+    private RequestBuilder getRequestBuilderForPostListingCsvYearMissing() throws IOException {
         return MockMvcRequestBuilders
                 .post(uploadListingCsvUrl)
-                .accept(MediaType.APPLICATION_JSON).content("code,make/model,power-in-ps,year,color,price\n" +
-                        "1,Maruti/Suzuki,180,123,2014,black,15950\n" +
-                        "2,audi/a3,111,2016,white,17210\n" +
-                        "3,vw/golf,86,2018,green,14980\n" +
-                        "4,skoda/octavia,86,,blue,16990")
+                .accept(MediaType.APPLICATION_JSON).content(readFileAsString("CsvListingYearMissing.csv"))
                 .contentType(MEDIA_TYP_TXT_CSV);
     }
 
