@@ -21,7 +21,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +42,10 @@ public class ListingControllerCsvUnitTest {
     @Value("${application.test.postUrlCsv}")
     private String uploadListingCsvUrl;
 
+    private static final String CSV_PREFIX = "src//test//resources//testData//csv//";
+
+    private static final String RESP_JSON_PREFIX = "src//test//resources//jsonResponse//";
+
     @Test
     public void uploadListingCsvTest_Ret400BadReqWhenCodeAbsent() throws Exception {
 
@@ -52,8 +55,7 @@ public class ListingControllerCsvUnitTest {
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
         MockHttpServletResponse response = result.getResponse();
         Assert.assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
-        JSONAssert.assertEquals("{\"message\":\"Field 'code' is mandatory but no value was provided.  at line" +
-                " number 1 in the csv file.\",\"details\":\"uri=/heycar/upload_csv/1190\"}",response.getContentAsString(),
+        JSONAssert.assertEquals(readFileAsString(RESP_JSON_PREFIX.concat("jsonRespWhenCodeMissingInCsvReq.json")),response.getContentAsString(),
                 JSONCompareMode.LENIENT);
     }
 
@@ -73,7 +75,7 @@ public class ListingControllerCsvUnitTest {
     private RequestBuilder getRequestBuilderForPostListingCsvCodeMissing() throws IOException {
         return MockMvcRequestBuilders
                 .post(uploadListingCsvUrl)
-                .accept(MediaType.APPLICATION_JSON).content(readFileAsString("CsvListingCodeMissing.csv"))
+                .accept(MediaType.APPLICATION_JSON).content(readFileAsString(CSV_PREFIX.concat("CsvListingCodeMissing.csv")))
                 .contentType(MEDIA_TYP_TXT_CSV);
     }
 
@@ -95,7 +97,7 @@ public class ListingControllerCsvUnitTest {
     private RequestBuilder getRequestBuilderForPostListingCsvPowerMissing() throws IOException {
         return MockMvcRequestBuilders
                 .post(uploadListingCsvUrl)
-                .accept(MediaType.APPLICATION_JSON).content(readFileAsString("CsvListingPowerMissing.csv"))
+                .accept(MediaType.APPLICATION_JSON).content(readFileAsString(CSV_PREFIX.concat("CsvListingPowerMissing.csv")))
                 .contentType(MEDIA_TYP_TXT_CSV);
     }
 
@@ -118,7 +120,7 @@ public class ListingControllerCsvUnitTest {
     private RequestBuilder getRequestBuilderForPostListingCsvYearMissing() throws IOException {
         return MockMvcRequestBuilders
                 .post(uploadListingCsvUrl)
-                .accept(MediaType.APPLICATION_JSON).content(readFileAsString("CsvListingYearMissing.csv"))
+                .accept(MediaType.APPLICATION_JSON).content(readFileAsString(CSV_PREFIX.concat("CsvListingYearMissing.csv")))
                 .contentType(MEDIA_TYP_TXT_CSV);
     }
 
