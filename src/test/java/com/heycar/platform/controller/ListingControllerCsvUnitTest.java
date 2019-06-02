@@ -29,7 +29,19 @@ import static org.mockito.Mockito.when;
 import static com.heycar.platform.utils.ITestUtils.readFileAsString;
 import static com.heycar.platform.constants.ListingTestConstants.CSV_PREFIX;
 import static com.heycar.platform.constants.ListingTestConstants.RESP_JSON_PREFIX;
-import static com.heycar.platform.constants.ListingTestConstants.CODE_MISSING_IN_CSV_FILE_NM;
+import static com.heycar.platform.constants.ListingTestConstants.CODE_MISSING_IN_CSV_RESP_FILE_NM;
+import static com.heycar.platform.constants.ListingTestConstants.CODE_MISSING_IN_CSV_FILE_REQ_NM;
+import static com.heycar.platform.constants.ListingTestConstants.POWER_MISSING_IN_CSV_RESP_FILE_NM;
+import static com.heycar.platform.constants.ListingTestConstants.POWER_MISSING_IN_CSV_FILE_REQ_NM;
+import static com.heycar.platform.constants.ListingTestConstants.YEAR_MISSING_IN_CSV_RESP_FILE_NM;
+import static com.heycar.platform.constants.ListingTestConstants.YEAR_MISSING_IN_CSV_FILE_REQ_NM;
+import static com.heycar.platform.constants.ListingTestConstants.COLOR_MISSING_IN_CSV_RESP_FILE_NM;
+import static com.heycar.platform.constants.ListingTestConstants.COLOR_MISSING_IN_CSV_FILE_REQ_NM;
+import static com.heycar.platform.constants.ListingTestConstants.MODEL_MISSING_IN_CSV_RESP_FILE_NM;
+import static com.heycar.platform.constants.ListingTestConstants.MAKE_MODEL_MISSING_IN_CSV_FILE_REQ_NM;
+import static com.heycar.platform.constants.ListingTestConstants.PRICE_MISSING_IN_CSV_RESP_FILE_NM;
+import static com.heycar.platform.constants.ListingTestConstants.PRICE_MODEL_MISSING_IN_CSV_FILE_REQ_NM;
+import static com.heycar.platform.constants.ListingTestConstants.POSITIVE_CSV_FILE_REQ_NM;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(ListingController.class)
@@ -56,7 +68,7 @@ public class ListingControllerCsvUnitTest {
         final MvcResult result = mockMvc.perform(requestBuilder).andReturn();
         final MockHttpServletResponse response = result.getResponse();
         Assert.assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
-        JSONAssert.assertEquals(readFileAsString(RESP_JSON_PREFIX.concat(CODE_MISSING_IN_CSV_FILE_NM)),
+        JSONAssert.assertEquals(readFileAsString(RESP_JSON_PREFIX.concat(CODE_MISSING_IN_CSV_RESP_FILE_NM)),
                 response.getContentAsString(), JSONCompareMode.LENIENT);
     }
 
@@ -76,7 +88,7 @@ public class ListingControllerCsvUnitTest {
     private RequestBuilder getRequestBuilderForPostListingCsvCodeMissing() throws IOException {
         return MockMvcRequestBuilders
                 .post(uploadListingCsvUrl)
-                .accept(MediaType.APPLICATION_JSON).content(readFileAsString(CSV_PREFIX.concat("CsvListingCodeMissing.csv")))
+                .accept(MediaType.APPLICATION_JSON).content(readFileAsString(CSV_PREFIX.concat(CODE_MISSING_IN_CSV_FILE_REQ_NM)))
                 .contentType(MEDIA_TYP_TXT_CSV);
     }
 
@@ -89,7 +101,7 @@ public class ListingControllerCsvUnitTest {
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
         MockHttpServletResponse response = result.getResponse();
         Assert.assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
-        JSONAssert.assertEquals(readFileAsString(RESP_JSON_PREFIX.concat("JsonRespWhenPowerMissingInCsvReq.json")),
+        JSONAssert.assertEquals(readFileAsString(RESP_JSON_PREFIX.concat(POWER_MISSING_IN_CSV_RESP_FILE_NM)),
                 response.getContentAsString(), JSONCompareMode.LENIENT);
 
     }
@@ -97,7 +109,7 @@ public class ListingControllerCsvUnitTest {
     private RequestBuilder getRequestBuilderForPostListingCsvPowerMissing() throws IOException {
         return MockMvcRequestBuilders
                 .post(uploadListingCsvUrl)
-                .accept(MediaType.APPLICATION_JSON).content(readFileAsString(CSV_PREFIX.concat("CsvListingPowerMissing.csv")))
+                .accept(MediaType.APPLICATION_JSON).content(readFileAsString(CSV_PREFIX.concat(POWER_MISSING_IN_CSV_FILE_REQ_NM)))
                 .contentType(MEDIA_TYP_TXT_CSV);
     }
 
@@ -111,7 +123,7 @@ public class ListingControllerCsvUnitTest {
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
         MockHttpServletResponse response = result.getResponse();
         Assert.assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
-        JSONAssert.assertEquals(readFileAsString(RESP_JSON_PREFIX.concat("JsonRespWhenYearMissingInCsvReq.json")),
+        JSONAssert.assertEquals(readFileAsString(RESP_JSON_PREFIX.concat(YEAR_MISSING_IN_CSV_RESP_FILE_NM)),
                 response.getContentAsString(),JSONCompareMode.LENIENT);
 
     }
@@ -119,7 +131,7 @@ public class ListingControllerCsvUnitTest {
     private RequestBuilder getRequestBuilderForPostListingCsvYearMissing() throws IOException {
         return MockMvcRequestBuilders
                 .post(uploadListingCsvUrl)
-                .accept(MediaType.APPLICATION_JSON).content(readFileAsString(CSV_PREFIX.concat("CsvListingYearMissing.csv")))
+                .accept(MediaType.APPLICATION_JSON).content(readFileAsString(CSV_PREFIX.concat(YEAR_MISSING_IN_CSV_FILE_REQ_NM)))
                 .contentType(MEDIA_TYP_TXT_CSV);
     }
 
@@ -132,16 +144,15 @@ public class ListingControllerCsvUnitTest {
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
         MockHttpServletResponse response = result.getResponse();
         Assert.assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
-        String respContent = response.getContentAsString();
-        JSONAssert.assertEquals(readFileAsString(RESP_JSON_PREFIX.concat("JsonRespWhenColorMissingInCsvReq.json")),response.getContentAsString(),
-                JSONCompareMode.LENIENT);
+        JSONAssert.assertEquals(readFileAsString(RESP_JSON_PREFIX.concat(COLOR_MISSING_IN_CSV_RESP_FILE_NM)),
+                response.getContentAsString(), JSONCompareMode.LENIENT);
 
     }
 
     private RequestBuilder getRequestBuilderForPostListingCsvColorMissing() throws IOException {
         return MockMvcRequestBuilders
                 .post(uploadListingCsvUrl)
-                .accept(MediaType.APPLICATION_JSON).content(readFileAsString(CSV_PREFIX.concat("CsvListingColorMissing.csv")))
+                .accept(MediaType.APPLICATION_JSON).content(readFileAsString(CSV_PREFIX.concat(COLOR_MISSING_IN_CSV_FILE_REQ_NM)))
                 .contentType(MEDIA_TYP_TXT_CSV);
     }
 
@@ -154,7 +165,7 @@ public class ListingControllerCsvUnitTest {
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
         MockHttpServletResponse response = result.getResponse();
         Assert.assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
-        JSONAssert.assertEquals(readFileAsString(RESP_JSON_PREFIX.concat("JsonRespWhenMakeModelMissingInCsv.json")),
+        JSONAssert.assertEquals(readFileAsString(RESP_JSON_PREFIX.concat(MODEL_MISSING_IN_CSV_RESP_FILE_NM)),
                 response.getContentAsString(), JSONCompareMode.LENIENT);
 
     }
@@ -162,7 +173,7 @@ public class ListingControllerCsvUnitTest {
     private RequestBuilder getRequestBuilderForPostListingCsvMakeModelMissing() throws IOException {
         return MockMvcRequestBuilders
                 .post(uploadListingCsvUrl)
-                .accept(MediaType.APPLICATION_JSON).content(readFileAsString(CSV_PREFIX.concat("CsvListingMakeModelMissing.csv")))
+                .accept(MediaType.APPLICATION_JSON).content(readFileAsString(CSV_PREFIX.concat(MAKE_MODEL_MISSING_IN_CSV_FILE_REQ_NM)))
                 .contentType(MEDIA_TYP_TXT_CSV);
     }
 
@@ -175,15 +186,15 @@ public class ListingControllerCsvUnitTest {
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
         MockHttpServletResponse response = result.getResponse();
         Assert.assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
-        JSONAssert.assertEquals(readFileAsString(RESP_JSON_PREFIX.concat("JsonRespWhenPriceMissingInCsvReq.json")),response.getContentAsString(),
-                JSONCompareMode.LENIENT);
+        JSONAssert.assertEquals(readFileAsString(RESP_JSON_PREFIX.concat(PRICE_MISSING_IN_CSV_RESP_FILE_NM)),
+                response.getContentAsString(), JSONCompareMode.LENIENT);
 
     }
 
     private RequestBuilder getRequestBuilderForPostListingCsvPriceMissing() throws IOException {
         return MockMvcRequestBuilders
                 .post(uploadListingCsvUrl)
-                .accept(MediaType.APPLICATION_JSON).content(readFileAsString(CSV_PREFIX.concat("CsvListingPriceMissing.csv")))
+                .accept(MediaType.APPLICATION_JSON).content(readFileAsString(CSV_PREFIX.concat(PRICE_MODEL_MISSING_IN_CSV_FILE_REQ_NM)))
                 .contentType(MEDIA_TYP_TXT_CSV);
     }
 
@@ -203,7 +214,7 @@ public class ListingControllerCsvUnitTest {
         return MockMvcRequestBuilders
                 .post(uploadListingCsvUrlPositiveUrl)
                 .accept(MediaType.APPLICATION_JSON).content(readFileAsString(CSV_PREFIX.concat
-                        ("CsvListingPostPositiveVehLstngData.csv"))).contentType(MEDIA_TYP_TXT_CSV);
+                        (POSITIVE_CSV_FILE_REQ_NM))).contentType(MEDIA_TYP_TXT_CSV);
     }
 
 }
