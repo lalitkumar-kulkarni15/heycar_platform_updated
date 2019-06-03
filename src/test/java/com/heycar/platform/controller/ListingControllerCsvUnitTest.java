@@ -61,7 +61,7 @@ public class ListingControllerCsvUnitTest {
     private String uploadListingCsvUrlPositiveUrl;
 
     @Test
-    public void uploadListingCsvTest_Ret400BadReqWhenCodeAbsent() throws Exception {
+    public void uploadListingCsvTestRet400BadReqWhenCodeAbsent() throws Exception {
 
         when(listingSvc.addListingInDataStore(Mockito.anyString(),Mockito.any())).thenReturn(getListingDocumentsCsv());
         final RequestBuilder requestBuilder = getRequestBuilderForPostListingCsvCodeMissing();
@@ -93,7 +93,7 @@ public class ListingControllerCsvUnitTest {
     }
 
     @Test
-    public void uploadListingCsvTest_Ret400BadReqWhenPowerAbsent() throws Exception {
+    public void uploadListingCsvTestRet400BadReqWhenPowerAbsent() throws Exception {
 
         when(listingSvc.addListingInDataStore(Mockito.anyString(),Mockito.any())).thenReturn(getListingDocumentsCsv());
         final RequestBuilder requestBuilder = getRequestBuilderForPostListingCsvPowerMissing();
@@ -114,7 +114,7 @@ public class ListingControllerCsvUnitTest {
 
 
     @Test
-    public void uploadListingCsvTest_Ret400BadReqWhenYearAbsent() throws Exception {
+    public void uploadListingCsvTestRet400BadReqWhenYearAbsent() throws Exception {
 
         when(listingSvc.addListingInDataStore(Mockito.anyString(),Mockito.any())).thenReturn(getListingDocumentsCsv());
         final RequestBuilder requestBuilder = getRequestBuilderForPostListingCsvYearMissing();
@@ -134,7 +134,7 @@ public class ListingControllerCsvUnitTest {
     }
 
     @Test
-    public void uploadListingCsvTest_Ret400BadReqWhenColorAbsent() throws Exception {
+    public void uploadListingCsvTestRet400BadReqWhenColorAbsent() throws Exception {
 
         when(listingSvc.addListingInDataStore(Mockito.anyString(),Mockito.any())).thenReturn(getListingDocumentsCsv());
         final RequestBuilder requestBuilder = getRequestBuilderForPostListingCsvColorMissing();
@@ -154,7 +154,7 @@ public class ListingControllerCsvUnitTest {
     }
 
     @Test
-    public void uploadListingCsvTest_Ret400BadReqWhenMakeModelAbsent() throws Exception {
+    public void uploadListingCsvTestRet400BadReqWhenMakeModelAbsent() throws Exception {
 
         when(listingSvc.addListingInDataStore(Mockito.anyString(),Mockito.any())).thenReturn(getListingDocumentsCsv());
         final RequestBuilder requestBuilder = getRequestBuilderForPostListingCsvMakeModelMissing();
@@ -174,7 +174,7 @@ public class ListingControllerCsvUnitTest {
     }
 
     @Test
-    public void uploadListingCsvTest_Ret400BadReqWhenPriceAbsent() throws Exception {
+    public void uploadListingCsvTestRet400BadReqWhenPriceAbsent() throws Exception {
 
         when(listingSvc.addListingInDataStore(Mockito.anyString(),Mockito.any())).thenReturn(getListingDocumentsCsv());
         final RequestBuilder requestBuilder = getRequestBuilderForPostListingCsvPriceMissing();
@@ -194,7 +194,7 @@ public class ListingControllerCsvUnitTest {
     }
 
     @Test
-    public void uploadListingCsvTest_Returns201Created() throws Exception {
+    public void uploadListingCsvTestReturns201Created() throws Exception {
 
         when(listingSvc.addListingInDataStore(Mockito.anyString(),Mockito.any())).thenReturn(getListingDocumentsCsv());
         final RequestBuilder requestBuilder = getRequestBuilderForPostListingCsv();

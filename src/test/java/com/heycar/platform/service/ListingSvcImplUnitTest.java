@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.List;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static com.heycar.platform.constants.ListingTestConstants.MERCEDEZ;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ListingSvcImplUnitTest {
@@ -33,7 +34,7 @@ public class ListingSvcImplUnitTest {
     private ListingSvcImpl listingSvcImpl;
 
     @Test
-    public void searchListingTest_Returns200OkWithValidData() throws ListingProcessingException {
+    public void searchListingTestReturns200OkWithValidData() throws ListingProcessingException {
 
         when(listingRepository.findByMakeAndModelAndYearAndColor(Mockito.anyString(),
                 Mockito.anyString(),Mockito.anyString(),Mockito.anyString())).thenReturn(popListingDocList());
@@ -45,27 +46,13 @@ public class ListingSvcImplUnitTest {
     private VendorListing popVendorListing(){
 
         VendorListing vendorListing = new VendorListing();
-        vendorListing.setMake("Mercedez");
+        vendorListing.setMake(MERCEDEZ);
         vendorListing.setModel("Benz");
         vendorListing.setYear("1989");
         vendorListing.setColor("Blue");
         vendorListing.setCode("13f");
         vendorListing.setkW("kw");
         return vendorListing;
-    }
-
-    private List<ListingDocument> popListingDocListForVerifyingSave(){
-
-        ListingDocument listingDoc = new ListingDocument();
-        listingDoc.setYear("1989");
-        listingDoc.setCode("13f");
-        listingDoc.setkW("kw");
-        listingDoc.setMake("Mercedez");
-        listingDoc.setModel("Benz");
-        listingDoc.setColor("Blue");
-        List<ListingDocument> listingDocList = new ArrayList<>();
-        listingDocList.add(listingDoc);
-        return listingDocList;
     }
 
     private List<ListingDocument> popListingDocList(){
@@ -83,7 +70,7 @@ public class ListingSvcImplUnitTest {
     }
 
     @Test
-    public void findAllListingTest_Returns200OkWithValidData() throws ListingProcessingException {
+    public void findAllListingTestReturns200OkWithValidData() throws ListingProcessingException {
 
         when(listingRepository.findAll()).thenReturn(popListingDocList());
         List<VendorListing> vendorListingList = this.listingSvcImpl.findAllListing();
@@ -91,35 +78,35 @@ public class ListingSvcImplUnitTest {
     }
 
     @Test(expected = ListingProcessingException.class)
-    public void addListingInDataStoreTest_ThrowsExceptionWhenPutMapping() throws ListingProcessingException {
+    public void addListingInDataStoreTestThrowsExceptionWhenPutMapping() throws ListingProcessingException {
 
         when(operations.putMapping(Mockito.any())).thenThrow(new RuntimeException("Failed to register put mapping."));
         listingSvcImpl.addListingInDataStore("15", Arrays.asList(popVendorListing()));
     }
 
     @Test(expected = ListingProcessingException.class)
-    public void addListingInDataStoreTest_ThrowsExceptionSave() throws ListingProcessingException {
+    public void addListingInDataStoreTestThrowsExceptionSave() throws ListingProcessingException {
 
         when(listingRepository.save(Collections.singleton(Mockito.anyObject()))).thenThrow(new RuntimeException("Failed to save data to repository."));
         listingSvcImpl.addListingInDataStore("15", Arrays.asList(popVendorListing()));
     }
 
     @Test(expected = ListingProcessingException.class)
-    public void findAllListingTest_ThrowsExceptionOnFindAll() throws ListingProcessingException {
+    public void findAllListingTestThrowsExceptionOnFindAll() throws ListingProcessingException {
 
         when(listingRepository.findAll()).thenThrow(new RuntimeException("Failed to find the data from the repository."));
         listingSvcImpl.findAllListing();
     }
 
     @Test
-    public void addListingInDataStoreTest_VerifiesPutMapping() throws ListingProcessingException {
+    public void addListingInDataStoreTestVerifiesPutMapping() throws ListingProcessingException {
 
         listingSvcImpl.addListingInDataStore("15", Arrays.asList(popVendorListing()));
         verify(operations,Mockito.times(1)).putMapping(ListingDocument.class);
     }
 
     @Test
-    public void addListingInDataStoreTest_VerifiesSave() throws ListingProcessingException {
+    public void addListingInDataStoreTestVerifiesSave() throws ListingProcessingException {
 
         listingSvcImpl.addListingInDataStore("15", Arrays.asList(popVendorListing()));
         ArgumentCaptor<List> arg = ArgumentCaptor.forClass(List.class);

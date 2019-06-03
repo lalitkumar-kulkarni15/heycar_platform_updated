@@ -66,7 +66,7 @@ public class ListingControllerJsonUnitTest {
     private String srchAllParamUrl;
 
     @Test
-    public void searchListingByParamsTest_Returns200OkWithListingData() throws Exception {
+    public void searchListingByParamsTestReturns200OkWithListingData() throws Exception {
 
         when(listingSvc.searchListing(Mockito.any())).thenReturn(getVendorListingLst());
         final RequestBuilder requestBuilder = MockMvcRequestBuilders.get(srchByParamUrl+"color=Blue").accept(
@@ -82,7 +82,7 @@ public class ListingControllerJsonUnitTest {
     }
 
     @Test
-    public void searchAllListingsTest_Returns200OkWithListingData() throws Exception {
+    public void searchAllListingsTestReturns200OkWithListingData() throws Exception {
 
         when(listingSvc.findAllListing()).thenReturn(getVendorListingLst());
 
@@ -110,7 +110,7 @@ public class ListingControllerJsonUnitTest {
     }
 
     @Test
-    public void uploadListingJsonTest_Returns201Created() throws Exception {
+    public void uploadListingJsonTestReturns201Created() throws Exception {
 
         when(listingSvc.addListingInDataStore(Mockito.anyString(),Mockito.any())).thenReturn(getListingDocuments());
         final RequestBuilder requestBuilder = getRequestBuilderForPostListingJson();
@@ -141,7 +141,7 @@ public class ListingControllerJsonUnitTest {
     }
 
     @Test
-    public void uploadListingJsonTest_Ret400BadReqWhenColorAbsent() throws Exception {
+    public void uploadListingJsonTestRet400BadReqWhenColorAbsent() throws Exception {
 
         when(listingSvc.addListingInDataStore(Mockito.anyString(),Mockito.any())).thenReturn(getListingDocuments());
         final RequestBuilder requestBuilder = getRequestBuilderForPostListingJsonColorMissing();
@@ -160,7 +160,7 @@ public class ListingControllerJsonUnitTest {
     }
 
     @Test
-    public void uploadListingJsonTest_Ret400BadReqWhenCodeAbsent() throws Exception {
+    public void uploadListingJsonTestRet400BadReqWhenCodeAbsent() throws Exception {
 
         when(listingSvc.addListingInDataStore(Mockito.anyString(),Mockito.any())).thenReturn(getListingDocuments());
         final RequestBuilder requestBuilder = getRequestBuilderForPostListingJsonCodeMissing();
@@ -179,7 +179,7 @@ public class ListingControllerJsonUnitTest {
     }
 
     @Test
-    public void uploadListingJsonTest_Ret400BadReqWhenMakeAbsent() throws Exception {
+    public void uploadListingJsonTestRet400BadReqWhenMakeAbsent() throws Exception {
 
         when(listingSvc.addListingInDataStore(Mockito.anyString(),Mockito.any())).thenReturn(getListingDocuments());
         final RequestBuilder requestBuilder = getRequestBuilderForPostListingJsonMakeMissing();
@@ -199,7 +199,7 @@ public class ListingControllerJsonUnitTest {
     }
 
     @Test
-    public void uploadListingJsonTest_Ret400BadReqWhenModelAbsent() throws Exception {
+    public void uploadListingJsonTestRet400BadReqWhenModelAbsent() throws Exception {
 
         when(listingSvc.addListingInDataStore(Mockito.anyString(),Mockito.any())).thenReturn(getListingDocuments());
         final RequestBuilder requestBuilder = getRequestBuilderForPostListingJsonModelMissing();
@@ -219,7 +219,7 @@ public class ListingControllerJsonUnitTest {
     }
 
     @Test
-    public void uploadListingJsonTest_Ret400BadReqWhenPowerAbsent() throws Exception {
+    public void uploadListingJsonTestRet400BadReqWhenPowerAbsent() throws Exception {
 
         when(listingSvc.addListingInDataStore(Mockito.anyString(),Mockito.any())).thenReturn(getListingDocuments());
         final RequestBuilder requestBuilder = getRequestBuilderForPostListingJsonPowerMissing();
@@ -239,7 +239,7 @@ public class ListingControllerJsonUnitTest {
 
 
     @Test
-    public void uploadListingJsonTest_Ret400BadReqWhenYearAbsent() throws Exception {
+    public void uploadListingJsonTestRet400BadReqWhenYearAbsent() throws Exception {
 
         when(listingSvc.addListingInDataStore(Mockito.anyString(),Mockito.any())).thenReturn(getListingDocuments());
         final RequestBuilder requestBuilder = getRequestBuilderForPostListingJsonYearMissing();

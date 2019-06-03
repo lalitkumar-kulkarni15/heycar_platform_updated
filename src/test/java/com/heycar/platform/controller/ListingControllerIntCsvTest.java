@@ -11,7 +11,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -19,7 +18,6 @@ import org.springframework.http.*;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.util.UriComponentsBuilder;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,17 +30,13 @@ import static com.heycar.platform.constants.ListingTestConstants.SRCH_BY_COLOR_2
 import static com.heycar.platform.constants.ListingTestConstants.SRCH_BY_COLOR_MK_MODEL_YR_RESP_INT_TST;
 import static com.heycar.platform.constants.ListingTestConstants.SRCH_BY_COLOR_MK_YR_RESP_INT_TST;
 import static com.heycar.platform.constants.ListingTestConstants.SRCH_BY_YR_RESP_INT_TST;
+import static com.heycar.platform.constants.ListingTestConstants.SRCH_BY_PARAM_URL;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
         classes = {HeycarPlatformApplication.class})
 @TestPropertySource(locations = "classpath:application-test-csv.properties")
 public class ListingControllerIntCsvTest {
-
-    @Autowired
-    private TestRestTemplate restTemplate;
-
-    private MockMvc mockMvc;
 
     @Value("${server.port}")
     private String port;
@@ -61,8 +55,12 @@ public class ListingControllerIntCsvTest {
 
     private HttpHeaders httpHeaders;
 
+    public static final String COLOR = "color";
+
+    public static final String WHITE = "white";
+
     @Test
-    public void uploadListingCsvTest_Returns201Created_ForPositiveCsvListing() {
+    public void uploadListingCsvTestReturns201CreatedForPositiveCsvListing() {
 
         ResponseEntity response = uploadCsvAndGetResponseEntity();
         Assert.assertNotNull(response);
@@ -72,9 +70,10 @@ public class ListingControllerIntCsvTest {
 
     private ResponseEntity uploadCsvAndGetResponseEntity() {
 
-        HttpEntity<ListingList> listingDocEnt = new HttpEntity<ListingList>(createTestDataForNewVehicleListingPositiveCsv(),
+        HttpEntity<ListingList> listingDocEnt = new HttpEntity<>(createTestDataForNewVehicleListingPositiveCsv(),
                 getHttpHeaderCsv());
 
+        TestRestTemplate restTemplate = new TestRestTemplate();
         List<HttpMessageConverter<?>> csvMessgeConverter = new ArrayList<>();
         csvMessgeConverter.add(new CsvHttpMessageConverter<>());
         restTemplate.getRestTemplate().setMessageConverters(csvMessgeConverter);
@@ -92,14 +91,14 @@ public class ListingControllerIntCsvTest {
      * @since 26-05-2019
      */
     @Test
-    public void searchAllTest_Returns200OK_WithValidDataInserted(){
+    public void searchAllTestReturns200OKWithValidDataInserted(){
 
         // Create test data.
         uploadCsvAndGetResponseEntity();
 
         TestRestTemplate restTemplate = new TestRestTemplate();
 
-        HttpEntity<VendorListing> searchListingReq = new HttpEntity<VendorListing>(null,getHttpHeaderJson());
+        HttpEntity<VendorListing> searchListingReq = new HttpEntity<>(null,getHttpHeaderJson());
         ResponseEntity<String> responseListings = restTemplate.exchange(ITestUtils.createURLWithPort
                                                   (searchAllUrl,host,port),
                                                   HttpMethod.GET,searchListingReq,String.class);
@@ -119,7 +118,7 @@ public class ListingControllerIntCsvTest {
     }
 
     @Test
-    public void searchTest_Returns200OK_WhenSearchedByColor() throws JSONException, IOException {
+    public void searchTestReturns200OKWhenSearchedByColor() throws JSONException, IOException {
 
         // Create test data.
         uploadCsvAndGetResponseEntity();
@@ -131,7 +130,7 @@ public class ListingControllerIntCsvTest {
         TestRestTemplate restTemplate = new TestRestTemplate();
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(ITestUtils.createURLWithPort(searchByParam,
-                                       host,port)).queryParam("color", "White");
+                                       host,port)).queryParam(COLOR, WHITE);
 
 
         ResponseEntity<String> responseListings = restTemplate.exchange
@@ -143,7 +142,7 @@ public class ListingControllerIntCsvTest {
     }
 
     @Test
-    public void searchTest_Returns200OK_WhenSearchedByColorMakeModelYear() throws JSONException, IOException {
+    public void searchTestReturns200OKWhenSearchedByColorMakeModelYear() throws JSONException, IOException {
 
         // Create test data.
         uploadCsvAndGetResponseEntity();
@@ -155,8 +154,8 @@ public class ListingControllerIntCsvTest {
 
         TestRestTemplate restTemplate = new TestRestTemplate();
 
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(ITestUtils.createURLWithPort("/heycar/searchByParam",
-                host,port)).queryParam("color", "White")
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(ITestUtils.createURLWithPort(SRCH_BY_PARAM_URL,
+                host,port)).queryParam(COLOR, WHITE)
                            .queryParam("make","Maruti")
                            .queryParam("model","Swift")
                            .queryParam("year","1987");
@@ -173,7 +172,7 @@ public class ListingControllerIntCsvTest {
     }
 
     @Test
-    public void searchTest_Returns200OK_WhenSearchedByColorMakeYear() throws JSONException, IOException {
+    public void searchTestReturns200OKWhenSearchedByColorMakeYear() throws JSONException, IOException {
 
         // Create test data.
         uploadCsvAndGetResponseEntity();
@@ -186,7 +185,7 @@ public class ListingControllerIntCsvTest {
         TestRestTemplate restTemplate = new TestRestTemplate();
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(ITestUtils.createURLWithPort("/heycar/searchByParam",
-                host,port)).queryParam("color", "White")
+                host,port)).queryParam(COLOR, WHITE)
                 .queryParam("make","Maruti")
                 .queryParam("year","1987");
 
@@ -202,7 +201,7 @@ public class ListingControllerIntCsvTest {
     }
 
     @Test
-    public void searchTest_Returns200OK_WhenSearchedByYear() throws JSONException, IOException {
+    public void searchTestReturns200OKWhenSearchedByYear() throws JSONException, IOException {
 
         // Create test data.
         uploadCsvAndGetResponseEntity();

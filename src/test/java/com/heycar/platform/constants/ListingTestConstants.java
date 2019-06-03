@@ -10,6 +10,8 @@ public final class ListingTestConstants {
 
     public static final String RESP_JSON_PREFIX = "src//test//resources//jsonResponse//";
 
+    public static final String SRCH_BY_PARAM_URL ="/heycar/searchByParam";
+
     /**
      *  JSON response file names
      */
@@ -87,5 +89,9 @@ public final class ListingTestConstants {
     public static final String PRICE_MODEL_MISSING_IN_CSV_FILE_REQ_NM = "CsvListingPriceMissing.csv";
 
     public static final String POSITIVE_CSV_FILE_REQ_NM = "CsvListingPostPositiveVehLstngData.csv";
+
+    public static final String MERCEDEZ = "Mercedes";
+
+    public static final String TWO_SIXTY_NINE_DOLAR = "269 $";
 
 }

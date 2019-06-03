@@ -40,8 +40,6 @@ public class SwaggerCfg {
     @Value("${application.email}")
     private String email;
 
-    private static final String BLANK = "";
-
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2).select()

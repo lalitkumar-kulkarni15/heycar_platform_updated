@@ -15,6 +15,8 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import java.util.ArrayList;
 import java.util.List;
+import static com.heycar.platform.constants.ListingTestConstants.MERCEDEZ;
+import static com.heycar.platform.constants.ListingTestConstants.TWO_SIXTY_NINE_DOLAR;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
@@ -34,8 +36,6 @@ public class ListingControllerIntJsonTest {
     @Value("${application.test.postUrlJson}")
     private String postUrlJson;
 
-    private HttpHeaders httpHeaders;
-
     /**
      * <p>This test case invokes the upload listing APi by passing the vehicle listing in JSON format.
      *   It verifies if the response received has the http status code - 201 Created {@link HttpStatus}</p>
@@ -44,10 +44,10 @@ public class ListingControllerIntJsonTest {
      * @see   {@link ListingController}
      */
     @Test
-    public void uploadListingTest_Returns201Created_ForSuccessfullUpload(){
+    public void uploadListingTestReturns201CreatedForSuccessfullUpload(){
 
         // Step 1 : Create the Http entity object which contains the request body and headers.
-        HttpEntity<List<VendorListing>> listingDocEnt = new HttpEntity<List<VendorListing>>(createTestDataForNewVehicleListingPositive(),
+        HttpEntity<List<VendorListing>> listingDocEnt = new HttpEntity<>(createTestDataForNewVehicleListingPositive(),
                                                         getHttpHeaderJson());
 
         /**
@@ -70,9 +70,9 @@ public class ListingControllerIntJsonTest {
         vendorListing.setCode("ba");
         vendorListing.setColor("Blue");
         vendorListing.setkW("2000");
-        vendorListing.setMake("Mercedes");
+        vendorListing.setMake(MERCEDEZ);
         vendorListing.setModel("X1");
-        vendorListing.setPrice("269 $");
+        vendorListing.setPrice(TWO_SIXTY_NINE_DOLAR);
         List<VendorListing> listingDocList = new ArrayList<>();
         listingDocList.add(vendorListing);
         return listingDocList;
@@ -81,7 +81,7 @@ public class ListingControllerIntJsonTest {
 
     private HttpHeaders getHttpHeaderJson(){
 
-        httpHeaders = new HttpHeaders();
+        HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         List<MediaType> mediatypeList = new ArrayList<>();
         mediatypeList.add(MediaType.APPLICATION_JSON);
@@ -90,10 +90,10 @@ public class ListingControllerIntJsonTest {
     }
 
     @Test
-    public void uploadListingTest_Returns400BadRequest_ForMissingCode(){
+    public void uploadListingTestReturns400BadRequestForMissingCode(){
 
         // Step 1 : Create the Http entity object which contains the request body and headers.
-        HttpEntity<List<VendorListing>> listingDocEnt = new HttpEntity<List<VendorListing>>(createTestDataForNewVehicleListingMissingCode(),
+        HttpEntity<List<VendorListing>> listingDocEnt = new HttpEntity<>(createTestDataForNewVehicleListingMissingCode(),
                                                         getHttpHeaderJson());
 
         ResponseEntity response = restTemplate.exchange(ITestUtils.createURLWithPort(postUrlJson,
@@ -110,19 +110,19 @@ public class ListingControllerIntJsonTest {
         vendorListing.setYear("1989");
         vendorListing.setColor("Blue");
         vendorListing.setkW("2000");
-        vendorListing.setMake("Mercedes");
+        vendorListing.setMake(MERCEDEZ);
         vendorListing.setModel("X1");
-        vendorListing.setPrice("269 $");
+        vendorListing.setPrice(TWO_SIXTY_NINE_DOLAR);
         List<VendorListing> listingDocList = new ArrayList<>();
         listingDocList.add(vendorListing);
         return listingDocList;
     }
 
     @Test
-    public void uploadListingTest_Returns400BadRequest_ForMissingMake(){
+    public void uploadListingTestReturns400BadRequestForMissingMake(){
 
         // Step 1 : Create the Http entity object which contains the request body and headers.
-        HttpEntity<List<VendorListing>> listingDocEnt = new HttpEntity<List<VendorListing>>(createTestDataForNewVehicleListingMissingMake(),
+        HttpEntity<List<VendorListing>> listingDocEnt = new HttpEntity<>(createTestDataForNewVehicleListingMissingMake(),
                 getHttpHeaderJson());
 
         /**
@@ -146,17 +146,17 @@ public class ListingControllerIntJsonTest {
         vendorListing.setColor("Blue");
         vendorListing.setkW("2000");
         vendorListing.setModel("X1");
-        vendorListing.setPrice("269 $");
+        vendorListing.setPrice(TWO_SIXTY_NINE_DOLAR);
         List<VendorListing> listingDocList = new ArrayList<>();
         listingDocList.add(vendorListing);
         return listingDocList;
     }
 
     @Test
-    public void uploadListingTest_Returns400BadRequest_ForMissingModel(){
+    public void uploadListingTestReturns400BadRequestForMissingModel(){
 
         // Step 1 : Create the Http entity object which contains the request body and headers.
-        HttpEntity<List<VendorListing>> listingDocEnt = new HttpEntity<List<VendorListing>>(createTestDataForNewVehicleListingMissingModel(),
+        HttpEntity<List<VendorListing>> listingDocEnt = new HttpEntity<>(createTestDataForNewVehicleListingMissingModel(),
                 getHttpHeaderJson());
 
         /**
@@ -179,18 +179,18 @@ public class ListingControllerIntJsonTest {
         vendorListing.setYear("1989");
         vendorListing.setColor("Blue");
         vendorListing.setkW("2000");
-        vendorListing.setMake("Mercedes");
-        vendorListing.setPrice("269 $");
+        vendorListing.setMake(MERCEDEZ);
+        vendorListing.setPrice(TWO_SIXTY_NINE_DOLAR);
         List<VendorListing> listingDocList = new ArrayList<>();
         listingDocList.add(vendorListing);
         return listingDocList;
     }
 
     @Test
-    public void uploadListingTest_Returns400BadRequest_ForMissingPower(){
+    public void uploadListingTestReturns400BadRequestForMissingPower(){
 
         // Step 1 : Create the Http entity object which contains the request body and headers.
-        HttpEntity<List<VendorListing>> listingDocEnt = new HttpEntity<List<VendorListing>>(createTestDataForNewVehicleListingMissingPower(),
+        HttpEntity<List<VendorListing>> listingDocEnt = new HttpEntity<>(createTestDataForNewVehicleListingMissingPower(),
                 getHttpHeaderJson());
 
         /**
@@ -212,19 +212,19 @@ public class ListingControllerIntJsonTest {
         vendorListing.setCode("ba");
         vendorListing.setYear("1989");
         vendorListing.setColor("Blue");
-        vendorListing.setMake("Mercedes");
+        vendorListing.setMake(MERCEDEZ);
         vendorListing.setModel("X1");
-        vendorListing.setPrice("269 $");
+        vendorListing.setPrice(TWO_SIXTY_NINE_DOLAR);
         List<VendorListing> listingDocList = new ArrayList<>();
         listingDocList.add(vendorListing);
         return listingDocList;
     }
 
     @Test
-    public void uploadListingTest_Returns400BadRequest_ForMissingYear(){
+    public void uploadListingTestReturns400BadRequestForMissingYear(){
 
         // Step 1 : Create the Http entity object which contains the request body and headers.
-        HttpEntity<List<VendorListing>> listingDocEnt = new HttpEntity<List<VendorListing>>(createTestDataForNewVehicleListingMissingYear(),
+        HttpEntity<List<VendorListing>> listingDocEnt = new HttpEntity<>(createTestDataForNewVehicleListingMissingYear(),
                 getHttpHeaderJson());
 
         /**
@@ -245,20 +245,20 @@ public class ListingControllerIntJsonTest {
         VendorListing vendorListing = new VendorListing();
         vendorListing.setCode("ba");
         vendorListing.setColor("Blue");
-        vendorListing.setMake("Mercedes");
+        vendorListing.setMake(MERCEDEZ);
         vendorListing.setModel("X1");
         vendorListing.setkW("2000");
-        vendorListing.setPrice("269 $");
+        vendorListing.setPrice(TWO_SIXTY_NINE_DOLAR);
         List<VendorListing> listingDocList = new ArrayList<>();
         listingDocList.add(vendorListing);
         return listingDocList;
     }
 
     @Test
-    public void uploadListingTest_Returns400BadRequest_ForMissingColor(){
+    public void uploadListingTestReturns400BadRequestForMissingColor(){
 
         // Step 1 : Create the Http entity object which contains the request body and headers.
-        HttpEntity<List<VendorListing>> listingDocEnt = new HttpEntity<List<VendorListing>>(createTestDataForNewVehicleListingMissingColor(),
+        HttpEntity<List<VendorListing>> listingDocEnt = new HttpEntity<>(createTestDataForNewVehicleListingMissingColor(),
                 getHttpHeaderJson());
 
         /**
@@ -279,19 +279,19 @@ public class ListingControllerIntJsonTest {
         VendorListing vendorListing = new VendorListing();
         vendorListing.setCode("ba");
         vendorListing.setYear("1989");
-        vendorListing.setMake("Mercedes");
+        vendorListing.setMake(MERCEDEZ);
         vendorListing.setModel("X1");
         vendorListing.setkW("2000");
-        vendorListing.setPrice("269 $");
+        vendorListing.setPrice(TWO_SIXTY_NINE_DOLAR);
         List<VendorListing> listingDocList = new ArrayList<>();
         listingDocList.add(vendorListing);
         return listingDocList;
     }
 
     @Test
-    public void uploadListingTest_Returns400BadRequest_ForMissingPrice(){
+    public void uploadListingTestReturns400BadRequestForMissingPrice(){
 
-        HttpEntity<List<VendorListing>> listingDocEnt = new HttpEntity<List<VendorListing>>(createTestDataForNewVehicleListingMissingPrice(),
+        HttpEntity<List<VendorListing>> listingDocEnt = new HttpEntity<>(createTestDataForNewVehicleListingMissingPrice(),
                 getHttpHeaderJson());
 
         ResponseEntity response = restTemplate.exchange(ITestUtils.createURLWithPort(postUrlJson,
@@ -307,7 +307,7 @@ public class ListingControllerIntJsonTest {
         VendorListing vendorListing = new VendorListing();
         vendorListing.setCode("ba");
         vendorListing.setYear("1989");
-        vendorListing.setMake("Mercedes");
+        vendorListing.setMake(MERCEDEZ);
         vendorListing.setModel("X1");
         vendorListing.setColor("Blue");
         vendorListing.setkW("2000");

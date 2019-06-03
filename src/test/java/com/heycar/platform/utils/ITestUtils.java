@@ -12,8 +12,6 @@ public interface ITestUtils {
     }
 
     public static String readFileAsString(final String filePath) throws IOException {
-
-        String prefix = "src//test//resources//testData//csv//";
         return new String(Files.readAllBytes(Paths.get(filePath)));
     }
 }
