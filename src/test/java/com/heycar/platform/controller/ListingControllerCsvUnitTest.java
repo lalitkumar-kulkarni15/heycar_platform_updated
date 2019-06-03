@@ -95,11 +95,10 @@ public class ListingControllerCsvUnitTest {
     @Test
     public void uploadListingCsvTest_Ret400BadReqWhenPowerAbsent() throws Exception {
 
-        List<ListingDocument> listingDocLst = getListingDocumentsCsv();
-        when(listingSvc.addListingInDataStore(Mockito.anyString(),Mockito.any())).thenReturn(listingDocLst);
-        RequestBuilder requestBuilder = getRequestBuilderForPostListingCsvPowerMissing();
-        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-        MockHttpServletResponse response = result.getResponse();
+        when(listingSvc.addListingInDataStore(Mockito.anyString(),Mockito.any())).thenReturn(getListingDocumentsCsv());
+        final RequestBuilder requestBuilder = getRequestBuilderForPostListingCsvPowerMissing();
+        final MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+        final MockHttpServletResponse response = result.getResponse();
         Assert.assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
         JSONAssert.assertEquals(readFileAsString(RESP_JSON_PREFIX.concat(POWER_MISSING_IN_CSV_RESP_FILE_NM)),
                 response.getContentAsString(), JSONCompareMode.LENIENT);
@@ -117,11 +116,10 @@ public class ListingControllerCsvUnitTest {
     @Test
     public void uploadListingCsvTest_Ret400BadReqWhenYearAbsent() throws Exception {
 
-        List<ListingDocument> listingDocLst = getListingDocumentsCsv();
-        when(listingSvc.addListingInDataStore(Mockito.anyString(),Mockito.any())).thenReturn(listingDocLst);
-        RequestBuilder requestBuilder = getRequestBuilderForPostListingCsvYearMissing();
-        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-        MockHttpServletResponse response = result.getResponse();
+        when(listingSvc.addListingInDataStore(Mockito.anyString(),Mockito.any())).thenReturn(getListingDocumentsCsv());
+        final RequestBuilder requestBuilder = getRequestBuilderForPostListingCsvYearMissing();
+        final MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+        final MockHttpServletResponse response = result.getResponse();
         Assert.assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
         JSONAssert.assertEquals(readFileAsString(RESP_JSON_PREFIX.concat(YEAR_MISSING_IN_CSV_RESP_FILE_NM)),
                 response.getContentAsString(),JSONCompareMode.LENIENT);
@@ -138,11 +136,10 @@ public class ListingControllerCsvUnitTest {
     @Test
     public void uploadListingCsvTest_Ret400BadReqWhenColorAbsent() throws Exception {
 
-        List<ListingDocument> listingDocLst = getListingDocumentsCsv();
-        when(listingSvc.addListingInDataStore(Mockito.anyString(),Mockito.any())).thenReturn(listingDocLst);
-        RequestBuilder requestBuilder = getRequestBuilderForPostListingCsvColorMissing();
-        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-        MockHttpServletResponse response = result.getResponse();
+        when(listingSvc.addListingInDataStore(Mockito.anyString(),Mockito.any())).thenReturn(getListingDocumentsCsv());
+        final RequestBuilder requestBuilder = getRequestBuilderForPostListingCsvColorMissing();
+        final MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+        final MockHttpServletResponse response = result.getResponse();
         Assert.assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
         JSONAssert.assertEquals(readFileAsString(RESP_JSON_PREFIX.concat(COLOR_MISSING_IN_CSV_RESP_FILE_NM)),
                 response.getContentAsString(), JSONCompareMode.LENIENT);
@@ -159,11 +156,10 @@ public class ListingControllerCsvUnitTest {
     @Test
     public void uploadListingCsvTest_Ret400BadReqWhenMakeModelAbsent() throws Exception {
 
-        List<ListingDocument> listingDocLst = getListingDocumentsCsv();
-        when(listingSvc.addListingInDataStore(Mockito.anyString(),Mockito.any())).thenReturn(listingDocLst);
-        RequestBuilder requestBuilder = getRequestBuilderForPostListingCsvMakeModelMissing();
-        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-        MockHttpServletResponse response = result.getResponse();
+        when(listingSvc.addListingInDataStore(Mockito.anyString(),Mockito.any())).thenReturn(getListingDocumentsCsv());
+        final RequestBuilder requestBuilder = getRequestBuilderForPostListingCsvMakeModelMissing();
+        final MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+        final MockHttpServletResponse response = result.getResponse();
         Assert.assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
         JSONAssert.assertEquals(readFileAsString(RESP_JSON_PREFIX.concat(MODEL_MISSING_IN_CSV_RESP_FILE_NM)),
                 response.getContentAsString(), JSONCompareMode.LENIENT);
@@ -180,11 +176,10 @@ public class ListingControllerCsvUnitTest {
     @Test
     public void uploadListingCsvTest_Ret400BadReqWhenPriceAbsent() throws Exception {
 
-        List<ListingDocument> listingDocLst = getListingDocumentsCsv();
-        when(listingSvc.addListingInDataStore(Mockito.anyString(),Mockito.any())).thenReturn(listingDocLst);
-        RequestBuilder requestBuilder = getRequestBuilderForPostListingCsvPriceMissing();
-        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-        MockHttpServletResponse response = result.getResponse();
+        when(listingSvc.addListingInDataStore(Mockito.anyString(),Mockito.any())).thenReturn(getListingDocumentsCsv());
+        final RequestBuilder requestBuilder = getRequestBuilderForPostListingCsvPriceMissing();
+        final MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+        final MockHttpServletResponse response = result.getResponse();
         Assert.assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
         JSONAssert.assertEquals(readFileAsString(RESP_JSON_PREFIX.concat(PRICE_MISSING_IN_CSV_RESP_FILE_NM)),
                 response.getContentAsString(), JSONCompareMode.LENIENT);
@@ -201,11 +196,10 @@ public class ListingControllerCsvUnitTest {
     @Test
     public void uploadListingCsvTest_Returns201Created() throws Exception {
 
-        List<ListingDocument> listingDocLst = getListingDocumentsCsv();
-        when(listingSvc.addListingInDataStore(Mockito.anyString(),Mockito.any())).thenReturn(listingDocLst);
-        RequestBuilder requestBuilder = getRequestBuilderForPostListingCsv();
-        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-        MockHttpServletResponse response = result.getResponse();
+        when(listingSvc.addListingInDataStore(Mockito.anyString(),Mockito.any())).thenReturn(getListingDocumentsCsv());
+        final RequestBuilder requestBuilder = getRequestBuilderForPostListingCsv();
+        final MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+        final MockHttpServletResponse response = result.getResponse();
         Assert.assertEquals(HttpStatus.CREATED.value(), response.getStatus());
 
     }

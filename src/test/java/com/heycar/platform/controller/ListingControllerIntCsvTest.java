@@ -21,10 +21,17 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.util.UriComponentsBuilder;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import static com.heycar.platform.constants.VehicleListingConstants.HEADER_ACCEPT;
+import static com.heycar.platform.utils.ITestUtils.readFileAsString;
+import static com.heycar.platform.constants.ListingTestConstants.RESP_JSON_PREFIX;
+import static com.heycar.platform.constants.ListingTestConstants.SRCH_BY_COLOR_200RESP_INT_TST;
+import static com.heycar.platform.constants.ListingTestConstants.SRCH_BY_COLOR_MK_MODEL_YR_RESP_INT_TST;
+import static com.heycar.platform.constants.ListingTestConstants.SRCH_BY_COLOR_MK_YR_RESP_INT_TST;
+import static com.heycar.platform.constants.ListingTestConstants.SRCH_BY_YR_RESP_INT_TST;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
@@ -112,7 +119,7 @@ public class ListingControllerIntCsvTest {
     }
 
     @Test
-    public void searchTest_Returns200OK_WhenSearchedByColor() throws JSONException {
+    public void searchTest_Returns200OK_WhenSearchedByColor() throws JSONException, IOException {
 
         // Create test data.
         uploadCsvAndGetResponseEntity();
@@ -132,12 +139,11 @@ public class ListingControllerIntCsvTest {
 
         Assert.assertNotNull(responseListings.getBody());
         Assert.assertEquals(HttpStatus.OK,responseListings.getStatusCode());
-        JSONAssert.assertEquals("[{\"code\":\"adp\",\"year\":\"1987\",\"color\":\"White\",\"price\":\"269 $\"" +
-                ",\"make\":\"Maruti\",\"model\":\"Swift\",\"kW\":\"2000\"}]",responseListings.getBody(), JSONCompareMode.LENIENT);
+        JSONAssert.assertEquals(readFileAsString(RESP_JSON_PREFIX.concat(SRCH_BY_COLOR_200RESP_INT_TST)),responseListings.getBody(), JSONCompareMode.LENIENT);
     }
 
     @Test
-    public void searchTest_Returns200OK_WhenSearchedByColorMakeModelYear() throws JSONException {
+    public void searchTest_Returns200OK_WhenSearchedByColorMakeModelYear() throws JSONException, IOException {
 
         // Create test data.
         uploadCsvAndGetResponseEntity();
@@ -162,13 +168,12 @@ public class ListingControllerIntCsvTest {
         Assert.assertNotNull(responseListings.getBody());
         Assert.assertFalse(responseListings.getBody().isEmpty());
         Assert.assertEquals(HttpStatus.OK,responseListings.getStatusCode());
-        JSONAssert.assertEquals("[{\"code\":\"adp\",\"year\":\"1987\",\"color\":\"White\",\"price\":\"269 $\"," +
-                "\"make\":\"Maruti\",\"model\":\"Swift\",\"kW\":\"2000\"}]",responseListings.getBody(),JSONCompareMode.LENIENT);
+        JSONAssert.assertEquals(readFileAsString(RESP_JSON_PREFIX.concat(SRCH_BY_COLOR_MK_MODEL_YR_RESP_INT_TST)),responseListings.getBody(),JSONCompareMode.LENIENT);
 
     }
 
     @Test
-    public void searchTest_Returns200OK_WhenSearchedByColorMakeYear() throws JSONException {
+    public void searchTest_Returns200OK_WhenSearchedByColorMakeYear() throws JSONException, IOException {
 
         // Create test data.
         uploadCsvAndGetResponseEntity();
@@ -192,13 +197,12 @@ public class ListingControllerIntCsvTest {
         Assert.assertNotNull(responseListings.getBody());
         Assert.assertFalse(responseListings.getBody().isEmpty());
         Assert.assertEquals(HttpStatus.OK,responseListings.getStatusCode());
-        JSONAssert.assertEquals("[{\"code\":\"adp\",\"year\":\"1987\",\"color\":\"White\",\"price\":\"269 $\"," +
-                "\"make\":\"Maruti\",\"model\":\"Swift\",\"kW\":\"2000\"}]",responseListings.getBody(),JSONCompareMode.LENIENT);
+        JSONAssert.assertEquals(readFileAsString(RESP_JSON_PREFIX.concat(SRCH_BY_COLOR_MK_YR_RESP_INT_TST)),responseListings.getBody(),JSONCompareMode.LENIENT);
 
     }
 
     @Test
-    public void searchTest_Returns200OK_WhenSearchedByYear() throws JSONException {
+    public void searchTest_Returns200OK_WhenSearchedByYear() throws JSONException, IOException {
 
         // Create test data.
         uploadCsvAndGetResponseEntity();
@@ -220,8 +224,7 @@ public class ListingControllerIntCsvTest {
         Assert.assertNotNull(responseListings.getBody());
         Assert.assertFalse(responseListings.getBody().isEmpty());
         Assert.assertEquals(HttpStatus.OK,responseListings.getStatusCode());
-        JSONAssert.assertEquals("[{\"code\":\"adp\",\"year\":\"1987\",\"color\":\"White\",\"price\":\"269 $\"," +
-                "\"make\":\"Maruti\",\"model\":\"Swift\",\"kW\":\"2000\"}]",responseListings.getBody(),JSONCompareMode.LENIENT);
+        JSONAssert.assertEquals(readFileAsString(RESP_JSON_PREFIX.concat(SRCH_BY_YR_RESP_INT_TST)),responseListings.getBody(),JSONCompareMode.LENIENT);
 
     }
 

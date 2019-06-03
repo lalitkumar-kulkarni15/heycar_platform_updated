@@ -22,9 +22,28 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import static org.mockito.Mockito.when;
+import static com.heycar.platform.constants.ListingTestConstants.JSON_PREFIX;
+import static com.heycar.platform.constants.ListingTestConstants.RESP_JSON_PREFIX;
+import static com.heycar.platform.utils.ITestUtils.readFileAsString;
+import static com.heycar.platform.constants.ListingTestConstants.YEAR_MISSING_IN_JSON_FILE_REQ_NM;
+import static com.heycar.platform.constants.ListingTestConstants.YEAR_MISSING_IN_JSON_RESP_FILE_NM;
+import static com.heycar.platform.constants.ListingTestConstants.POWER_MISSING_IN_JSON_RESP_FILE_NM;
+import static com.heycar.platform.constants.ListingTestConstants.POWER_MISSING_IN_JSON_FILE_REQ_NM;
+import static com.heycar.platform.constants.ListingTestConstants.MODEL_MISSING_IN_JSON_FILE_REQ_NM;
+import static com.heycar.platform.constants.ListingTestConstants.MAKE_MISSING_IN_JSON_FILE_REQ_NM;
+import static com.heycar.platform.constants.ListingTestConstants.CODE_MISSING_IN_JSON_FILE_REQ_NM;
+import static com.heycar.platform.constants.ListingTestConstants.COLOR_MISSING_IN_JSON_FILE_REQ_NM;
+import static com.heycar.platform.constants.ListingTestConstants.POSITIVE_JSON_FILE_REQ_NM;
+import static com.heycar.platform.constants.ListingTestConstants.POSITIVE_JSON_RESP_FILE_NM_FR_SRCH_BY_PARAMS;
+import static com.heycar.platform.constants.ListingTestConstants.POSITIVE_JSON_RESP_FILE_NM_FR_SRCH_ALL;
+import static com.heycar.platform.constants.ListingTestConstants.COLOR_MISSING_IN_JSON_RESP_FILE_NM;
+import static com.heycar.platform.constants.ListingTestConstants.CODE_MISSING_IN_JSON_RESP_FILE_NM;
+import static com.heycar.platform.constants.ListingTestConstants.MAKE_MISSING_IN_JSON_RESP_FILE_NM;
+import static com.heycar.platform.constants.ListingTestConstants.MODEL_MISSING_IN_JSON_RESP_FILE_NM;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(ListingController.class)
@@ -49,36 +68,31 @@ public class ListingControllerJsonUnitTest {
     @Test
     public void searchListingByParamsTest_Returns200OkWithListingData() throws Exception {
 
-        Mockito.when(listingSvc.searchListing(Mockito.any())).thenReturn(getVendorListingLst());
-
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.get(
-                srchByParamUrl+"color=Blue").accept(
+        when(listingSvc.searchListing(Mockito.any())).thenReturn(getVendorListingLst());
+        final RequestBuilder requestBuilder = MockMvcRequestBuilders.get(srchByParamUrl+"color=Blue").accept(
                 MediaType.APPLICATION_JSON);
 
-        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-        MockHttpServletResponse response = result.getResponse();
+        final MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+        final MockHttpServletResponse response = result.getResponse();
         Assert.assertNotNull(response);
         Assert.assertEquals(HttpStatus.OK.value(), response.getStatus());
-        JSONAssert.assertEquals("[{\"code\":null,\"year\":\"1989\",\"color\":\"Blue\",\"price\":\"200\"," +
-                "\"make\":\"X1\",\"model\":\"Mercedes\",\"kW\":\"4000\"}]",response.getContentAsString(),
-                JSONCompareMode.LENIENT);
+        JSONAssert.assertEquals(readFileAsString(RESP_JSON_PREFIX.concat(POSITIVE_JSON_RESP_FILE_NM_FR_SRCH_BY_PARAMS)),
+                                                response.getContentAsString(),
+                                                JSONCompareMode.LENIENT);
     }
 
     @Test
     public void searchAllListingsTest_Returns200OkWithListingData() throws Exception {
 
-        Mockito.when(listingSvc.findAllListing()).thenReturn(getVendorListingLst());
+        when(listingSvc.findAllListing()).thenReturn(getVendorListingLst());
 
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.get(
-                srchAllParamUrl).accept(
-                MediaType.APPLICATION_JSON);
-
-        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-        MockHttpServletResponse response = result.getResponse();
+        final RequestBuilder requestBuilder = MockMvcRequestBuilders.get(srchAllParamUrl).accept(MediaType.APPLICATION_JSON);
+        final MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+        final MockHttpServletResponse response = result.getResponse();
         Assert.assertNotNull(response);
         Assert.assertEquals(HttpStatus.OK.value(), response.getStatus());
-        JSONAssert.assertEquals("[{\"code\":null,\"year\":\"1989\",\"color\":\"Blue\",\"price\":\"200\",\"make\"" +
-                ":\"X1\",\"model\":\"Mercedes\",\"kW\":\"4000\"}]",response.getContentAsString(), JSONCompareMode.LENIENT);
+        JSONAssert.assertEquals(readFileAsString(RESP_JSON_PREFIX.concat(POSITIVE_JSON_RESP_FILE_NM_FR_SRCH_ALL)),
+                response.getContentAsString(), JSONCompareMode.LENIENT);
     }
 
     private List<VendorListing> getVendorListingLst(){
@@ -98,28 +112,18 @@ public class ListingControllerJsonUnitTest {
     @Test
     public void uploadListingJsonTest_Returns201Created() throws Exception {
 
-        List<ListingDocument> listingDocLst = getListingDocuments();
-        when(listingSvc.addListingInDataStore(Mockito.anyString(),Mockito.any())).thenReturn(listingDocLst);
-        RequestBuilder requestBuilder = getRequestBuilderForPostListingJson();
-        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-        MockHttpServletResponse response = result.getResponse();
+        when(listingSvc.addListingInDataStore(Mockito.anyString(),Mockito.any())).thenReturn(getListingDocuments());
+        final RequestBuilder requestBuilder = getRequestBuilderForPostListingJson();
+        final MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+        final MockHttpServletResponse response = result.getResponse();
         Assert.assertEquals(HttpStatus.CREATED.value(), response.getStatus());
 
     }
 
-    private RequestBuilder getRequestBuilderForPostListingJson() {
+    private RequestBuilder getRequestBuilderForPostListingJson() throws IOException {
         return MockMvcRequestBuilders
                 .post(vehListingUrl)
-                .accept(MediaType.APPLICATION_JSON).content("[{\n" +
-                        "\"code\": \"TwentyOneCode\",\n" +
-                        "\"make\": \"Honda\",\n" +
-                        "\"model\": \"City\",\n" +
-                        "\"kW\": \"132\",\n" +
-                        "\"year\": \"2022\",\n" +
-                        "\"color\": \"Green\",\n" +
-                        "\"price\": \"3443\"\n" +
-                        "}\n" +
-                        "]")
+                .accept(MediaType.APPLICATION_JSON).content(readFileAsString(JSON_PREFIX.concat(POSITIVE_JSON_FILE_REQ_NM)))
                 .contentType(MediaType.APPLICATION_JSON);
     }
 
@@ -139,142 +143,97 @@ public class ListingControllerJsonUnitTest {
     @Test
     public void uploadListingJsonTest_Ret400BadReqWhenColorAbsent() throws Exception {
 
-        List<ListingDocument> listingDocLst = getListingDocuments();
-        when(listingSvc.addListingInDataStore(Mockito.anyString(),Mockito.any())).thenReturn(listingDocLst);
-        RequestBuilder requestBuilder = getRequestBuilderForPostListingJsonColorMissing();
-        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-        MockHttpServletResponse response = result.getResponse();
+        when(listingSvc.addListingInDataStore(Mockito.anyString(),Mockito.any())).thenReturn(getListingDocuments());
+        final RequestBuilder requestBuilder = getRequestBuilderForPostListingJsonColorMissing();
+        final MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+        final MockHttpServletResponse response = result.getResponse();
         Assert.assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
-        JSONAssert.assertEquals("{\"message\":\"Color cannot be null - \",\"details\":\"uri=/heycar/vehicle_listings/16\"}"
+        JSONAssert.assertEquals(readFileAsString(RESP_JSON_PREFIX.concat(COLOR_MISSING_IN_JSON_RESP_FILE_NM))
                 ,response.getContentAsString(),JSONCompareMode.LENIENT);
     }
 
-    private RequestBuilder getRequestBuilderForPostListingJsonColorMissing() {
+    private RequestBuilder getRequestBuilderForPostListingJsonColorMissing() throws IOException {
         return MockMvcRequestBuilders
                 .post(vehListingUrl)
-                .accept(MediaType.APPLICATION_JSON).content("[{\n" +
-                        "\"code\": \"TwentyOneCode\",\n" +
-                        "\"make\": \"Honda\",\n" +
-                        "\"model\": \"City\",\n" +
-                        "\"kW\": \"132\",\n" +
-                        "\"year\": \"2022\",\n" +
-                        "\"price\": \"3443\"\n" +
-                        "}\n" +
-                        "]")
+                .accept(MediaType.APPLICATION_JSON).content(readFileAsString(JSON_PREFIX.concat(COLOR_MISSING_IN_JSON_FILE_REQ_NM)))
                 .contentType(MediaType.APPLICATION_JSON);
     }
 
     @Test
     public void uploadListingJsonTest_Ret400BadReqWhenCodeAbsent() throws Exception {
 
-        List<ListingDocument> listingDocLst = getListingDocuments();
-        when(listingSvc.addListingInDataStore(Mockito.anyString(),Mockito.any())).thenReturn(listingDocLst);
-        RequestBuilder requestBuilder = getRequestBuilderForPostListingJsonCodeMissing();
-        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-        MockHttpServletResponse response = result.getResponse();
+        when(listingSvc.addListingInDataStore(Mockito.anyString(),Mockito.any())).thenReturn(getListingDocuments());
+        final RequestBuilder requestBuilder = getRequestBuilderForPostListingJsonCodeMissing();
+        final MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+        final MockHttpServletResponse response = result.getResponse();
         Assert.assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
-        JSONAssert.assertEquals("{\"message\":\"Code cannot be null - \",\"details\":\"uri=/heycar/vehicle_listings/16\"}"
+        JSONAssert.assertEquals(readFileAsString(RESP_JSON_PREFIX.concat(CODE_MISSING_IN_JSON_RESP_FILE_NM))
                 ,response.getContentAsString(),JSONCompareMode.LENIENT);
     }
 
-    private RequestBuilder getRequestBuilderForPostListingJsonCodeMissing() {
+    private RequestBuilder getRequestBuilderForPostListingJsonCodeMissing() throws IOException {
         return MockMvcRequestBuilders
                 .post(vehListingUrl)
-                .accept(MediaType.APPLICATION_JSON).content("[{\n" +
-                        "\"make\": \"Honda\",\n" +
-                        "\"model\": \"City\",\n" +
-                        "\"kW\": \"132\",\n" +
-                        "\"year\": \"2022\",\n" +
-                        "\"color\": \"Green\",\n" +
-                        "\"price\": \"3443\"\n" +
-                        "}\n" +
-                        "]")
+                .accept(MediaType.APPLICATION_JSON).content(readFileAsString(JSON_PREFIX.concat(CODE_MISSING_IN_JSON_FILE_REQ_NM)))
                 .contentType(MediaType.APPLICATION_JSON);
     }
 
     @Test
     public void uploadListingJsonTest_Ret400BadReqWhenMakeAbsent() throws Exception {
 
-        List<ListingDocument> listingDocLst = getListingDocuments();
-        when(listingSvc.addListingInDataStore(Mockito.anyString(),Mockito.any())).thenReturn(listingDocLst);
-        RequestBuilder requestBuilder = getRequestBuilderForPostListingJsonMakeMissing();
-        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-        MockHttpServletResponse response = result.getResponse();
+        when(listingSvc.addListingInDataStore(Mockito.anyString(),Mockito.any())).thenReturn(getListingDocuments());
+        final RequestBuilder requestBuilder = getRequestBuilderForPostListingJsonMakeMissing();
+        final MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+        final MockHttpServletResponse response = result.getResponse();
         Assert.assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
-        JSONAssert.assertEquals("{\"message\":\"Make cannot be null - \",\"details\":\"uri=/heycar/vehicle_listings/16\"}"
+        JSONAssert.assertEquals(readFileAsString(RESP_JSON_PREFIX.concat(MAKE_MISSING_IN_JSON_RESP_FILE_NM))
                 ,response.getContentAsString(),JSONCompareMode.LENIENT);
 
     }
 
-    private RequestBuilder getRequestBuilderForPostListingJsonMakeMissing() {
+    private RequestBuilder getRequestBuilderForPostListingJsonMakeMissing() throws IOException {
         return MockMvcRequestBuilders
                 .post(vehListingUrl)
-                .accept(MediaType.APPLICATION_JSON).content("[{\n" +
-                        "\"code\": \"TwentyOneCode\",\n" +
-                        "\"model\": \"City\",\n" +
-                        "\"kW\": \"132\",\n" +
-                        "\"year\": \"2022\",\n" +
-                        "\"color\": \"Green\",\n" +
-                        "\"price\": \"3443\"\n" +
-                        "}\n" +
-                        "]")
+                .accept(MediaType.APPLICATION_JSON).content(readFileAsString(JSON_PREFIX.concat(MAKE_MISSING_IN_JSON_FILE_REQ_NM)))
                 .contentType(MediaType.APPLICATION_JSON);
     }
 
     @Test
     public void uploadListingJsonTest_Ret400BadReqWhenModelAbsent() throws Exception {
 
-        List<ListingDocument> listingDocLst = getListingDocuments();
-        when(listingSvc.addListingInDataStore(Mockito.anyString(),Mockito.any())).thenReturn(listingDocLst);
-        RequestBuilder requestBuilder = getRequestBuilderForPostListingJsonModelMissing();
-        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-        MockHttpServletResponse response = result.getResponse();
+        when(listingSvc.addListingInDataStore(Mockito.anyString(),Mockito.any())).thenReturn(getListingDocuments());
+        final RequestBuilder requestBuilder = getRequestBuilderForPostListingJsonModelMissing();
+        final MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+        final MockHttpServletResponse response = result.getResponse();
         Assert.assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
-        JSONAssert.assertEquals("{\"message\":\"Model cannot be null - \",\"details\":\"uri=/heycar/vehicle_listings/16\"}"
+        JSONAssert.assertEquals(readFileAsString(RESP_JSON_PREFIX.concat(MODEL_MISSING_IN_JSON_RESP_FILE_NM))
                 ,response.getContentAsString(),JSONCompareMode.LENIENT);
 
     }
 
-    private RequestBuilder getRequestBuilderForPostListingJsonModelMissing() {
+    private RequestBuilder getRequestBuilderForPostListingJsonModelMissing() throws IOException {
         return MockMvcRequestBuilders
                 .post(vehListingUrl)
-                .accept(MediaType.APPLICATION_JSON).content("[{\n" +
-                        "\"code\": \"TwentyOneCode\",\n" +
-                        "\"make\": \"Honda\",\n" +
-                        "\"kW\": \"132\",\n" +
-                        "\"year\": \"2022\",\n" +
-                        "\"color\": \"Green\",\n" +
-                        "\"price\": \"3443\"\n" +
-                        "}\n" +
-                        "]")
+                .accept(MediaType.APPLICATION_JSON).content(readFileAsString(JSON_PREFIX.concat(MODEL_MISSING_IN_JSON_FILE_REQ_NM)))
                 .contentType(MediaType.APPLICATION_JSON);
     }
 
     @Test
     public void uploadListingJsonTest_Ret400BadReqWhenPowerAbsent() throws Exception {
 
-        List<ListingDocument> listingDocLst = getListingDocuments();
-        when(listingSvc.addListingInDataStore(Mockito.anyString(),Mockito.any())).thenReturn(listingDocLst);
-        RequestBuilder requestBuilder = getRequestBuilderForPostListingJsonPowerMissing();
-        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-        MockHttpServletResponse response = result.getResponse();
+        when(listingSvc.addListingInDataStore(Mockito.anyString(),Mockito.any())).thenReturn(getListingDocuments());
+        final RequestBuilder requestBuilder = getRequestBuilderForPostListingJsonPowerMissing();
+        final MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+        final MockHttpServletResponse response = result.getResponse();
         Assert.assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
-        JSONAssert.assertEquals("{\"message\":\"Power cannot be null - \",\"details\":\"uri=/heycar/vehicle_listings/16\"}"
+        JSONAssert.assertEquals(readFileAsString(RESP_JSON_PREFIX.concat(POWER_MISSING_IN_JSON_RESP_FILE_NM))
                 ,response.getContentAsString(),JSONCompareMode.LENIENT);
     }
 
-    private RequestBuilder getRequestBuilderForPostListingJsonPowerMissing() {
+    private RequestBuilder getRequestBuilderForPostListingJsonPowerMissing() throws IOException {
         return MockMvcRequestBuilders
                 .post(vehListingUrl)
-                .accept(MediaType.APPLICATION_JSON).content("[{\n" +
-                        "\"code\": \"TwentyOneCode\",\n" +
-                        "\"make\": \"Honda\",\n" +
-                        "\"model\": \"City\",\n" +
-                        "\"year\": \"2022\",\n" +
-                        "\"color\": \"Green\",\n" +
-                        "\"price\": \"3443\"\n" +
-                        "}\n" +
-                        "]")
+                .accept(MediaType.APPLICATION_JSON).content(readFileAsString(JSON_PREFIX.concat(POWER_MISSING_IN_JSON_FILE_REQ_NM)))
                 .contentType(MediaType.APPLICATION_JSON);
     }
 
@@ -282,28 +241,19 @@ public class ListingControllerJsonUnitTest {
     @Test
     public void uploadListingJsonTest_Ret400BadReqWhenYearAbsent() throws Exception {
 
-        List<ListingDocument> listingDocLst = getListingDocuments();
-        when(listingSvc.addListingInDataStore(Mockito.anyString(),Mockito.any())).thenReturn(listingDocLst);
-        RequestBuilder requestBuilder = getRequestBuilderForPostListingJsonYearMissing();
-        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-        MockHttpServletResponse response = result.getResponse();
+        when(listingSvc.addListingInDataStore(Mockito.anyString(),Mockito.any())).thenReturn(getListingDocuments());
+        final RequestBuilder requestBuilder = getRequestBuilderForPostListingJsonYearMissing();
+        final MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+        final MockHttpServletResponse response = result.getResponse();
         Assert.assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
-        JSONAssert.assertEquals("{\"message\":\"Year cannot be null - \",\"details\":\"uri=/heycar/vehicle_listings/16\"}"
+        JSONAssert.assertEquals(readFileAsString(RESP_JSON_PREFIX.concat(YEAR_MISSING_IN_JSON_RESP_FILE_NM))
                 ,response.getContentAsString(),JSONCompareMode.LENIENT);
     }
 
-    private RequestBuilder getRequestBuilderForPostListingJsonYearMissing() {
+    private RequestBuilder getRequestBuilderForPostListingJsonYearMissing() throws IOException {
         return MockMvcRequestBuilders
                 .post(vehListingUrl)
-                .accept(MediaType.APPLICATION_JSON).content("[{\n" +
-                        "\"code\": \"TwentyOneCode\",\n" +
-                        "\"make\": \"Honda\",\n" +
-                        "\"model\": \"City\",\n" +
-                        "\"kW\": \"132\",\n" +
-                        "\"color\": \"Green\",\n" +
-                        "\"price\": \"3443\"\n" +
-                        "}\n" +
-                        "]")
+                .accept(MediaType.APPLICATION_JSON).content(readFileAsString(JSON_PREFIX.concat(YEAR_MISSING_IN_JSON_FILE_REQ_NM)))
                 .contentType(MediaType.APPLICATION_JSON);
     }
 

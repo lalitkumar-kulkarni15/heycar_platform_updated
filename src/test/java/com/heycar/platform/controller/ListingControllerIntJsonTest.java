@@ -96,27 +96,6 @@ public class ListingControllerIntJsonTest {
         HttpEntity<List<VendorListing>> listingDocEnt = new HttpEntity<List<VendorListing>>(createTestDataForNewVehicleListingMissingCode(),
                                                         getHttpHeaderJson());
 
-        /**
-         * Step 2 : Pass the http entity created in #step 1 along with the resource url to rest template to hit the
-         *          service and get the response back which contains the http status code and the uri of the resources
-         *          created.
-         */
-
-        //List<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>();
-        //Add the Jackson Message converter
-        //MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-        // Note: here we are making this converter to process any kind of response,
-        // not only application/*json, which is the default behaviour
-        //converter.setSupportedMediaTypes(Collections.singletonList(MediaType.TEXT_PLAIN));
-
-        //MappingJackson2HttpMessageConverter converterJSon = new MappingJackson2HttpMessageConverter();
-        //converterJSon.setSupportedMediaTypes(Collections.singletonList(MediaType.APPLICATION_JSON));
-        //List<HttpMessageConverter<?>> csvMessgeonverter = new ArrayList<>();
-        //csvMessgeonverter.add(converter);
-        //csvMessgeonverter.add(converterJSon);
-
-        //restTemplate.getRestTemplate().setMessageConverters(csvMessgeonverter);
-
         ResponseEntity response = restTemplate.exchange(ITestUtils.createURLWithPort(postUrlJson,
                 host,port ),HttpMethod.POST,listingDocEnt, String.class);
 
@@ -312,15 +291,9 @@ public class ListingControllerIntJsonTest {
     @Test
     public void uploadListingTest_Returns400BadRequest_ForMissingPrice(){
 
-        // Step 1 : Create the Http entity object which contains the request body and headers.
         HttpEntity<List<VendorListing>> listingDocEnt = new HttpEntity<List<VendorListing>>(createTestDataForNewVehicleListingMissingPrice(),
                 getHttpHeaderJson());
 
-        /**
-         * Step 2 : Pass the http entity created in #step 1 along with the resource url to rest template to hit the
-         *          service and get the response back which contains the http status code and the uri of the resources
-         *          created.
-         */
         ResponseEntity response = restTemplate.exchange(ITestUtils.createURLWithPort(postUrlJson,
                 host,port ),HttpMethod.POST,listingDocEnt, String.class);
 
@@ -342,10 +315,5 @@ public class ListingControllerIntJsonTest {
         listingDocList.add(vendorListing);
         return listingDocList;
     }
-
-
-
-
-
 
 }
