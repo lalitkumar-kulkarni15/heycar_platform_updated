@@ -34,7 +34,7 @@ import java.util.Optional;
 @Validated
 @RestController
 @RequestMapping(value = "/heycar")
-@Api(tags = "Vehicle listing API", value = "This API houses all the endpoints for adding/modifying/searching listing of vehicles.")
+@Api(value = "Vehicle listing API")
 public class ListingController {
 
     @Autowired
@@ -56,11 +56,13 @@ public class ListingController {
      *                        Also returns the uri of the resource created as a part of http response headers
      *                        with the key Location.
      */
-    @ApiOperation(value = "Create a new Job Offer.", notes = "This API creates a new Job Offer and stores in the data store.")
-    @ApiResponses(value = {@ApiResponse(code = 500, message = "Something went wrong in the service, please " + "contact the system" +
-                 " administrator - Email - lalitkulkarniofficial@gmail.com"),@ApiResponse(code = 201, message = "Job offer has been" +
-            " successfully created in the system.") })
-    @ApiResponse(code = 400, message = "Bad input request.Please check the error description for more details.")
+    @ApiOperation(value = "Upload the vehicle listing to the portal in csv format. ")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved list"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
+    })
     @PostMapping(value = "/upload_csv/{dealer_id}",consumes = "text/csv",produces = "application/json")
     public ResponseEntity uploadListing(HttpServletRequest request,@PathVariable("dealer_id") String dealerId,
                                         @RequestBody ListingList listing) throws
@@ -102,6 +104,13 @@ public class ListingController {
      * @throws URISyntaxException        This exception is thrown when there is any issue in the URI.
      * @throws InvalidInputDataException This exception is thrown if there is any validation exception.
      */
+    @ApiOperation(value = "Upload the vehicle listing to the portal in json format. ")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved list"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
+    })
     @PostMapping(value = "/vehicle_listings/{dealer_id}",consumes = "application/json",produces = "application/json")
     public ResponseEntity uploadListing(HttpServletRequest request,@PathVariable("dealer_id") String dealerId,
                                      @Valid @RequestBody List<VendorListing> listing) throws URISyntaxException,
@@ -128,6 +137,13 @@ public class ListingController {
      * @return                            {@link ResponseEntity<List<ListingDocument>>}
      * @throws  InvalidInputDataException This exception is thrown if the search params are null.
      */
+    @ApiOperation(value = "Search the vehicle listing by search parameters", response = List.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved list"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
+    })
     @GetMapping(value = "/searchByParam",produces = "application/json")
     public ResponseEntity<List<VendorListing>> searchListingByParams(@RequestParam Map<String,String> allParams)
             throws InvalidInputDataException, ListingProcessingException {
@@ -152,6 +168,13 @@ public class ListingController {
      *
      * @return {@link ResponseEntity<List<ListingDocument>>}
      */
+    @ApiOperation(value = "Search all the vehicle listings", response = List.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved list"),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
+    })
     @GetMapping(value = "/searchAllListings",produces = "application/json")
     public ResponseEntity<List<VendorListing>> searchAllListings() throws ListingProcessingException {
 
