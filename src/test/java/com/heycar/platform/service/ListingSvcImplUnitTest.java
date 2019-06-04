@@ -21,6 +21,16 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static com.heycar.platform.constants.ListingTestConstants.MERCEDEZ;
 
+/**
+ * <p>
+ *  This class is responsible for housing the unit test cases for the listings service implementation class.
+ *  {@link ListingSvcImpl}
+ *
+ *  @since   19-May-2019
+ *  @author  Lalit Kulkarni
+ *  @version 1.0
+ * </p>
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class ListingSvcImplUnitTest {
 
