@@ -21,12 +21,26 @@ import java.io.OutputStreamWriter;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.List;
+import static com.heycar.platform.constants.VehicleListingConstants.CSV;
+import static com.heycar.platform.constants.VehicleListingConstants.TEXT;
 
+/**
+ * <p>
+ *  This class is responsible for housing the methods to convert the input csv
+ *  to the java object and vice versa.
+ * </p>
+ *
+ * @param <T>
+ * @param <L>
+ * @since 01-06-2019
+ * @author  Lalitkumar Kulkarni
+ * @version 1.0
+ */
 public class CsvHttpMessageConverter<T, L extends ListParam<T>>
           extends AbstractHttpMessageConverter<L> {
     
     public CsvHttpMessageConverter () {
-        super(new MediaType("text", "csv"));
+        super(new MediaType(TEXT, CSV));
     }
     
     @Override
@@ -35,7 +49,17 @@ public class CsvHttpMessageConverter<T, L extends ListParam<T>>
     }
 
     private static final String CSV_PARSING_EXCEPTION_MSG = "Exception while parsing the CSV file.";
-    
+
+    /**
+     * <p>
+     *  This method converts the nput csv to java beans.
+     * </p>
+     *
+     * @param clazz
+     * @param inputMessage
+     * @return
+     * @throws IOException
+     */
     @Override
     protected L readInternal (Class<? extends L> clazz,HttpInputMessage inputMessage)
               throws IOException {
@@ -47,10 +71,8 @@ public class CsvHttpMessageConverter<T, L extends ListParam<T>>
         CSVReader csv = new CSVReader(new InputStreamReader(inputMessage.getBody()));
         CsvToBean<T> csvToBean = new CsvToBean<>();
 
-        List<T> beanList = null;
-
         try {
-            beanList = csvToBean.parse(strategy, csv);
+            List<T> beanList = csvToBean.parse(strategy, csv);
             L cls = clazz.newInstance();
             cls.setList(beanList);
             return cls;
@@ -59,13 +81,20 @@ public class CsvHttpMessageConverter<T, L extends ListParam<T>>
         }
     }
 
-    @SuppressWarnings("unchecked")
+    /**
+    * <p>
+    *  This method converts the output object to csv.
+    * </p>
+     *
+     * @param outputMessage
+     * @param typ
+    */
     @Override
-    protected void writeInternal (L l, HttpOutputMessage outputMessage)
+    protected void writeInternal (L typ, HttpOutputMessage outputMessage)
               throws IOException {
 
         HeaderColumnNameMappingStrategy<T> strategy = new HeaderColumnNameMappingStrategy<>();
-        strategy.setType(toBeanType(l.getClass().getGenericSuperclass()));
+        strategy.setType(toBeanType(typ.getClass().getGenericSuperclass()));
 
         OutputStreamWriter outputStream = new OutputStreamWriter(outputMessage.getBody());
         StatefulBeanToCsv<T> beanToCsv =
@@ -75,16 +104,15 @@ public class CsvHttpMessageConverter<T, L extends ListParam<T>>
                             .build();
 
             try {
-                beanToCsv.write(l.getList());
+                beanToCsv.write(typ.getList());
             } catch (CsvDataTypeMismatchException | CsvRequiredFieldEmptyException e) {
                 throw new HttpMessageNotWritableException(CSV_PARSING_EXCEPTION_MSG,e);
+            } finally {
+                outputStream.close();
             }
-
-            outputStream.close();
 
     }
 
-    @SuppressWarnings("unchecked")
     private Class<T> toBeanType (Type type) {
         return (Class<T>) ((ParameterizedType) type).getActualTypeArguments()[0];
     }

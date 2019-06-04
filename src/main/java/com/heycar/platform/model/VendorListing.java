@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.opencsv.bean.CsvBindByName;
 import javax.validation.constraints.NotNull;
 
+import static com.heycar.platform.constants.VehicleListingConstants.FORWARD_SLASH;
+
 public class VendorListing {
 
     public VendorListing() {
@@ -62,11 +64,11 @@ public class VendorListing {
     public void setMakeModel(String makeModel) {
 
         if (null != makeModel) {
-            this.make = makeModel.split("/")[0];
+            this.make = makeModel.split(FORWARD_SLASH)[0];
         }
 
         if (null != makeModel) {
-            this.model = makeModel.split("/")[1];
+            this.model = makeModel.split(FORWARD_SLASH)[1];
         }
 
         this.makeModel = makeModel;

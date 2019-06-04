@@ -22,10 +22,18 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import static com.heycar.platform.constants.VehicleListingConstants.COLOR;
+import static com.heycar.platform.constants.VehicleListingConstants.MAKE;
+import static com.heycar.platform.constants.VehicleListingConstants.MODEL;
+import static com.heycar.platform.constants.VehicleListingConstants.YEAR;
+import static com.heycar.platform.constants.VehicleListingConstants.LOCATION;
+import static com.heycar.platform.constants.VehicleListingConstants.FORWARD_SLASH;
 
 /**
- * <p>This is a restfull service controller which houses the entry point methods to perform the related
- * C.R.U.D. operations on the vehicle listings. /p>
+ * <p>
+ * This is a restfull service controller which houses the entry point methods to perform the related
+ * C.R.U.D. operations on the vehicle listings.
+ * /p>
  *
  * @author  Lalit Kulkarni
  * @since   24-05-2019
@@ -58,10 +66,11 @@ public class ListingController {
      */
     @ApiOperation(value = "Upload the vehicle listing to the portal in csv format. ")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successfully retrieved list"),
+            @ApiResponse(code = 201, message = "Successfully uploaded the vehicle listing."),
             @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
-            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
+            @ApiResponse(code = 500, message = "Internal technical exception has occurred.")
     })
     @PostMapping(value = "/upload_csv/{dealer_id}",consumes = "text/csv",produces = "application/json")
     public ResponseEntity uploadListing(HttpServletRequest request,@PathVariable("dealer_id") String dealerId,
@@ -84,7 +93,7 @@ public class ListingController {
      */
     private HttpHeaders getHttpHeaders(HttpServletRequest request, List<ListingDocument> listingDocument) {
         HttpHeaders headers = new HttpHeaders();
-        listingDocument.stream().forEach(doc -> headers.add("Location", request.getRequestURL().append("/")
+        listingDocument.stream().forEach(doc -> headers.add(LOCATION, request.getRequestURL().append(FORWARD_SLASH)
                 .append(doc.getDealerIdCode()).toString()));
         return headers;
     }
@@ -106,10 +115,11 @@ public class ListingController {
      */
     @ApiOperation(value = "Upload the vehicle listing to the portal in json format. ")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successfully retrieved list"),
+            @ApiResponse(code = 201, message = "Successfully uploaded the vehicle listing."),
             @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
-            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
+            @ApiResponse(code = 500, message = "Internal technical exception has occurred.")
     })
     @PostMapping(value = "/vehicle_listings/{dealer_id}",consumes = "application/json",produces = "application/json")
     public ResponseEntity uploadListing(HttpServletRequest request,@PathVariable("dealer_id") String dealerId,
@@ -139,10 +149,11 @@ public class ListingController {
      */
     @ApiOperation(value = "Search the vehicle listing by search parameters", response = List.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successfully retrieved list"),
+            @ApiResponse(code = 200, message = "Successfully retrieved vehicle listings"),
             @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
-            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
+            @ApiResponse(code = 500, message = "Internal technical exception has occurred.")
     })
     @GetMapping(value = "/searchByParam",produces = "application/json")
     public ResponseEntity<List<VendorListing>> searchListingByParams(@RequestParam Map<String,String> allParams)
@@ -155,10 +166,10 @@ public class ListingController {
 
     private VendorListing mapVendorListingReq(@RequestParam Map<String, String> allParams) {
         VendorListing vendorListing = new VendorListing();
-        vendorListing.setColor(allParams.get("color"));
-        vendorListing.setMake(allParams.get("make"));
-        vendorListing.setModel(allParams.get("model"));
-        vendorListing.setYear(allParams.get("year"));
+        vendorListing.setColor(allParams.get(COLOR));
+        vendorListing.setMake(allParams.get(MAKE));
+        vendorListing.setModel(allParams.get(MODEL));
+        vendorListing.setYear(allParams.get(YEAR));
         return vendorListing;
     }
 
@@ -170,10 +181,11 @@ public class ListingController {
      */
     @ApiOperation(value = "Search all the vehicle listings", response = List.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successfully retrieved list"),
+            @ApiResponse(code = 200, message = "Successfully retrieved vehicle listings"),
             @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
-            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found"),
+            @ApiResponse(code = 500, message = "Internal technical exception has occurred.")
     })
     @GetMapping(value = "/searchAllListings",produces = "application/json")
     public ResponseEntity<List<VendorListing>> searchAllListings() throws ListingProcessingException {

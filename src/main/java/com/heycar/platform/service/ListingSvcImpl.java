@@ -38,6 +38,15 @@ public class ListingSvcImpl implements IListingSvc {
     private static final String INSERTION_FAILED_MSG = "Failed while inserting the vendor listing in the data store.";
     private static final String SEARCHING_FAILED_MSG = "Failed while searching the vendor listing from the data store.";
 
+    /**
+     * <p>
+     *  This method adds the vehicle listing in the elastic search repository.
+     * </p>
+     * @param dealerId                    This is the dealer id of dealer of the vehicle.
+     * @param listing                     This is the actual vehicle listing.
+     * @return                            {@link List<ListingDocument>}
+     * @throws ListingProcessingException
+     */
     @Override
     @Transactional
     public List<ListingDocument> addListingInDataStore(final String dealerId, final List<VendorListing> listing)
@@ -69,6 +78,21 @@ public class ListingSvcImpl implements IListingSvc {
                                               listng.getPrice())).collect(Collectors.toList());
     }
 
+    /**
+     * <p>
+     *  This method searches the vehicle listing from the vehicle listing elastic search repository
+     *  on the basis of the search parameters :-
+     *  <ul>
+     *   <li>Make</li>
+     *   <li>Model</li>
+     *   <li>Color</li>
+     *   <li>Year</li>
+     *  </ul>
+     * </p>
+     * @param listingSrchPrms             {@link VendorListing} This object contains the input search parameters.
+     * @return                            {@link List<VendorListing>}
+     * @throws ListingProcessingException
+     */
     @Override
     @Transactional(readOnly = true)
     public List<VendorListing> searchListing(VendorListing listingSrchPrms) throws ListingProcessingException {
@@ -101,6 +125,14 @@ public class ListingSvcImpl implements IListingSvc {
                 )).collect(Collectors.toList());
     }
 
+    /**
+     * <p>
+     * This method searches all the vehicle listings from the elastic search repository.
+     * </p>
+     *
+     * @return {@link List<VendorListing>}
+     * @throws ListingProcessingException
+     */
     @Override
     @Transactional(readOnly = true)
     public List<VendorListing> findAllListing() throws ListingProcessingException {

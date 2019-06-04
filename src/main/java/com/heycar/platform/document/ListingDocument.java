@@ -3,6 +3,15 @@ package com.heycar.platform.document;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 
+/**
+ * <p>
+ *  This is the elastic search document to hold the vehicle listings properties.
+ * </p>
+ *
+ * @since   01-06-2019
+ * @author  Lalitkumar Kulkarni
+ * @version 1.0
+ */
 @Document(indexName = "users", type = "user", shards = 1)
 public class ListingDocument {
 
@@ -23,6 +32,7 @@ public class ListingDocument {
         this.price = price;
     }
 
+    // A unique combination of the dealer id and code.
     @Id
     private String dealerIdCode;
 

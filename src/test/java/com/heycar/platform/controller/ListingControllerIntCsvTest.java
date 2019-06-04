@@ -23,7 +23,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import static com.heycar.platform.constants.VehicleListingConstants.HEADER_ACCEPT;
+
+import static com.heycar.platform.constants.VehicleListingConstants.*;
 import static com.heycar.platform.utils.ITestUtils.readFileAsString;
 import static com.heycar.platform.constants.ListingTestConstants.RESP_JSON_PREFIX;
 import static com.heycar.platform.constants.ListingTestConstants.SRCH_BY_COLOR_200RESP_INT_TST;
@@ -54,10 +55,6 @@ public class ListingControllerIntCsvTest {
     private String searchByParam;
 
     private HttpHeaders httpHeaders;
-
-    public static final String COLOR = "color";
-
-    public static final String WHITE = "white";
 
     @Test
     public void uploadListingCsvTestReturns201CreatedForPositiveCsvListing() {

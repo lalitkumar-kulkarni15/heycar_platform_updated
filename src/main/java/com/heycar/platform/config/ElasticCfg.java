@@ -10,9 +10,40 @@ import org.springframework.data.elasticsearch.repository.config.EnableElasticsea
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * <p>
+ *  This class contains the configuration specific to the elastic search storage.
+ * </p>
+ *
+ * @since   01-06-2019
+ * @author  Lalitkumar Kulkarni
+ * @version 1.0
+ */
 @Configuration
 @EnableElasticsearchRepositories(basePackages = "com.techprimers.elastic.repository")
 public class ElasticCfg {
+
+    private static final String HTTP_ENABLED = "http.enabled";
+
+    private static final String SHARDS_INDEX_NO = "index.number_of_shards";
+
+    private static final String PATH_DATA = "path.data";
+
+    private static final String PATH_LOGS = "path.logs";
+
+    private static final String PATH_WORK = "path.work";
+
+    private static final String PATH_HOME = "path.home";
+
+    private static final String TRUE = "true";
+
+    private static final String DATA = "data";
+
+    private static final String LOGS = "logs";
+
+    private static final String WORK = "work";
+
+    private static final String ELASTIC = "elastic";
 
     @Bean
     public NodeBuilder nodeBuilder() {
@@ -21,15 +52,15 @@ public class ElasticCfg {
 
     @Bean
     public ElasticsearchOperations elasticsearchTemplate() throws IOException {
-        File tmpDir = File.createTempFile("elastic", Long.toString(System.nanoTime()));
+        File tmpDir = File.createTempFile(ELASTIC, Long.toString(System.nanoTime()));
         Settings.Builder elasticsearchSettings =
                 Settings.settingsBuilder()
-                        .put("http.enabled", "true") // 1
-                        .put("index.number_of_shards", "1")
-                        .put("path.data", new File(tmpDir, "data").getAbsolutePath()) // 2
-                        .put("path.logs", new File(tmpDir, "logs").getAbsolutePath()) // 2
-                        .put("path.work", new File(tmpDir, "work").getAbsolutePath()) // 2
-                        .put("path.home", tmpDir); // 3
+                        .put(HTTP_ENABLED, TRUE)
+                        .put(SHARDS_INDEX_NO, "1")
+                        .put(PATH_DATA, new File(tmpDir, DATA).getAbsolutePath())
+                        .put(PATH_LOGS, new File(tmpDir, LOGS).getAbsolutePath())
+                        .put(PATH_WORK, new File(tmpDir, WORK).getAbsolutePath())
+                        .put(PATH_HOME, tmpDir);
 
 
 

@@ -51,9 +51,6 @@ public final class ListingTestConstants {
 
     public static final String SRCH_BY_YR_RESP_INT_TST = "JsonRespWhnSrchByYrIntTstInCsvReq.json";
 
-
-
-
     /**
      * JSON request file name
      */
@@ -70,8 +67,6 @@ public final class ListingTestConstants {
     public static final String COLOR_MISSING_IN_JSON_FILE_REQ_NM = "JsonReqWhenColorMissingJsonReq.json";
 
     public static final String POSITIVE_JSON_FILE_REQ_NM = "JsonReqForPositiveJsonReq..json";
-
-
 
     /**
      * CSV request file name.

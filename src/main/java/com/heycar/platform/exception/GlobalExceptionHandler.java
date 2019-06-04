@@ -14,10 +14,30 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.util.Set;
 
+/**
+ * <p>
+ *  This class is the global exception handler. This is responsible to handle specific exceptions and
+ *  throw back appropriate http status codes with error messages.
+ * </p>
+ *
+ * @author  Lalitkumar Kulkarni
+ * @version 1.0
+ * @since   01-06-2019
+ */
 @ControllerAdvice
 @RestController
 public class GlobalExceptionHandler {
 
+    /**
+     * <p>
+     *  This method handles the constraint violation exception which is thrown by the controller layer.
+     *  This throws a 400 BAD_REQUEST http status code to the consumer if the constraint is violated.
+     * </p>
+     *
+     * @param  ex      {@link ConstraintViolationException
+     * @param  request {@link WebRequest}
+     * @return         {@link ResponseEntity}
+     */
     @ExceptionHandler(value= {ConstraintViolationException.class})
     public final ResponseEntity<ErrorDetails> handleConstrntViolationException(ConstraintViolationException ex, WebRequest request) {
 
@@ -28,6 +48,17 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
 
+    /**
+     * <p>
+     *  This method handles the validation exception {@link HttpMessageNotReadableException} and {@link HttpMessageNotWritableException}
+     *  which is thrown from the controller layer.This throws 400 BAD_REQUEST http status code along with the appropriate error message
+     *  to the consumer of the service.
+     * </p>
+     *
+     * @param ex      {@link Exception}
+     * @param request {@link WebRequest}
+     * @return        {@link ResponseEntity}
+     */
     @ExceptionHandler(value= {HttpMessageNotReadableException.class,HttpMessageNotWritableException.class})
     public final ResponseEntity<ErrorDetails> handleValidationException(Exception ex,WebRequest request) {
 
@@ -43,6 +74,17 @@ public class GlobalExceptionHandler {
 
     }
 
+    /**
+     * <p>
+     * This method handles the internal technical exception thrown by the lower layers.
+     * It returns back 500 INTERNAL_TECHNICAL_EXCEPTION http status code back to the
+     * consumer of the API.
+     *
+     * </p>
+     * @param ex      {@link Exception}
+     * @param request {@link WebRequest}
+     * @return        {@link ResponseEntity}
+     */
     @ExceptionHandler(value= {Exception.class})
     public final ResponseEntity<ErrorDetails> handleInternalTechException(Exception ex, WebRequest request) {
 
