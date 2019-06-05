@@ -4,6 +4,8 @@ public final class ListingTestConstants {
 
     private ListingTestConstants(){}
 
+    public static final String LOC_HEADER_FR_SUCCESS_LISTNG_UPLOAD = "http://localhost:8097/heycar/vehicle_listings/16/16ba";
+
     public static final String CSV_PREFIX = "src//test//resources//testData//csv//";
 
     public static final String JSON_PREFIX = "src//test//resources//testData//json//";

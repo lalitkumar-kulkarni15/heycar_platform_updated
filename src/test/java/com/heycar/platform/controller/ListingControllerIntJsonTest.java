@@ -15,8 +15,8 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import java.util.ArrayList;
 import java.util.List;
-import static com.heycar.platform.constants.ListingTestConstants.MERCEDEZ;
-import static com.heycar.platform.constants.ListingTestConstants.TWO_SIXTY_NINE_DOLAR;
+
+import static com.heycar.platform.constants.ListingTestConstants.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
@@ -35,6 +35,8 @@ public class ListingControllerIntJsonTest {
 
     @Value("${application.test.postUrlJson}")
     private String postUrlJson;
+
+
 
     /**
      * <p>This test case invokes the upload listing APi by passing the vehicle listing in JSON format.
@@ -58,9 +60,41 @@ public class ListingControllerIntJsonTest {
          ResponseEntity response = restTemplate.exchange(ITestUtils.createURLWithPort(postUrlJson,
                                    host,port ),HttpMethod.POST,listingDocEnt, String.class);
 
-         // Check if the response is not null and the http status code is - 201 Created.
+         // Check if the response is not null and the http status code is - 201 Created with location header.
          Assert.assertNotNull(response);
          Assert.assertEquals(HttpStatus.CREATED,response.getStatusCode());
+
+    }
+
+    /**
+     * <p>This test case invokes the upload listing APi by passing the vehicle listing in JSON format.
+     *  It verifies if the response received has the location header with the uri of created resource.
+     *  {@link HttpStatus}</p>
+     *
+     * @since 25-05-2019
+     * @see   {@link ListingController}
+     */
+    @Test
+    public void uploadListingTestReturnsLocHeaderForSuccessfullUpload(){
+
+        // Step 1 : Create the Http entity object which contains the request body and headers.
+        HttpEntity<List<VendorListing>> listingDocEnt = new HttpEntity<>(createTestDataForNewVehicleListingPositive(),
+                getHttpHeaderJson());
+
+        /**
+         * Step 2 : Pass the http entity created in #step 1 along with the resource url to rest template to hit the
+         *          service and get the response back which contains the http status code and the uri of the resources
+         *          created.
+         */
+        ResponseEntity response = restTemplate.exchange(ITestUtils.createURLWithPort(postUrlJson,
+                host,port ),HttpMethod.POST,listingDocEnt, String.class);
+
+        // Check if the response is not null and the http status code is - 201 Created with location header.
+        Assert.assertNotNull(response);
+        Assert.assertNotNull(response.getHeaders());
+        Assert.assertNotNull(response.getHeaders().getLocation());
+        Assert.assertEquals(response.getHeaders().getLocation().toString(), LOC_HEADER_FR_SUCCESS_LISTNG_UPLOAD);
+
     }
 
     private List<VendorListing> createTestDataForNewVehicleListingPositive(){

@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import static com.heycar.platform.constants.VehicleListingConstants.*;
 import static com.heycar.platform.utils.ITestUtils.readFileAsString;
 import static com.heycar.platform.constants.ListingTestConstants.RESP_JSON_PREFIX;
@@ -59,7 +58,7 @@ public class ListingControllerIntCsvTest {
     @Test
     public void uploadListingCsvTestReturns201CreatedForPositiveCsvListing() {
 
-        ResponseEntity response = uploadCsvAndGetResponseEntity();
+        final ResponseEntity response = uploadCsvAndGetResponseEntity();
         Assert.assertNotNull(response);
         Assert.assertEquals(HttpStatus.CREATED,response.getStatusCode());
 
@@ -67,7 +66,7 @@ public class ListingControllerIntCsvTest {
 
     private ResponseEntity uploadCsvAndGetResponseEntity() {
 
-        HttpEntity<ListingList> listingDocEnt = new HttpEntity<>(createTestDataForNewVehicleListingPositiveCsv(),
+        final HttpEntity<ListingList> listingDocEnt = new HttpEntity<>(createTestDataForNewVehicleListingPositiveCsv(),
                 getHttpHeaderCsv());
 
         TestRestTemplate restTemplate = new TestRestTemplate();
@@ -95,8 +94,8 @@ public class ListingControllerIntCsvTest {
 
         TestRestTemplate restTemplate = new TestRestTemplate();
 
-        HttpEntity<VendorListing> searchListingReq = new HttpEntity<>(null,getHttpHeaderJson());
-        ResponseEntity<String> responseListings = restTemplate.exchange(ITestUtils.createURLWithPort
+        final HttpEntity<VendorListing> searchListingReq = new HttpEntity<>(null,getHttpHeaderJson());
+        final ResponseEntity<String> responseListings = restTemplate.exchange(ITestUtils.createURLWithPort
                                                   (searchAllUrl,host,port),
                                                   HttpMethod.GET,searchListingReq,String.class);
 
@@ -120,22 +119,19 @@ public class ListingControllerIntCsvTest {
         // Create test data.
         uploadCsvAndGetResponseEntity();
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.set(HEADER_ACCEPT, MediaType.APPLICATION_JSON_VALUE);
-
-        HttpEntity<?> entity = new HttpEntity<>(headers);
+        HttpEntity<?> entity = getHttpEntityWithHeaders();
         TestRestTemplate restTemplate = new TestRestTemplate();
 
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(ITestUtils.createURLWithPort(searchByParam,
+        final UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(ITestUtils.createURLWithPort(searchByParam,
                                        host,port)).queryParam(COLOR, WHITE);
 
-
-        ResponseEntity<String> responseListings = restTemplate.exchange
+        final ResponseEntity<String> responseListings = restTemplate.exchange
                 (builder.toUriString(),HttpMethod.GET,entity,String.class);
 
         Assert.assertNotNull(responseListings.getBody());
         Assert.assertEquals(HttpStatus.OK,responseListings.getStatusCode());
-        JSONAssert.assertEquals(readFileAsString(RESP_JSON_PREFIX.concat(SRCH_BY_COLOR_200RESP_INT_TST)),responseListings.getBody(), JSONCompareMode.LENIENT);
+        JSONAssert.assertEquals(readFileAsString(RESP_JSON_PREFIX.concat(SRCH_BY_COLOR_200RESP_INT_TST)),responseListings.getBody(),
+                JSONCompareMode.LENIENT);
     }
 
     @Test
@@ -144,27 +140,25 @@ public class ListingControllerIntCsvTest {
         // Create test data.
         uploadCsvAndGetResponseEntity();
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.set(HEADER_ACCEPT, MediaType.APPLICATION_JSON_VALUE);
-
-        HttpEntity<?> entity = new HttpEntity<>(headers);
+        HttpEntity<?> entity = getHttpEntityWithHeaders();
 
         TestRestTemplate restTemplate = new TestRestTemplate();
 
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(ITestUtils.createURLWithPort(SRCH_BY_PARAM_URL,
+        final UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(ITestUtils.createURLWithPort(SRCH_BY_PARAM_URL,
                 host,port)).queryParam(COLOR, WHITE)
-                           .queryParam("make","Maruti")
-                           .queryParam("model","Swift")
-                           .queryParam("year","1987");
+                           .queryParam(MAKE,"Maruti")
+                           .queryParam(MODEL,"Swift")
+                           .queryParam(YEAR,"1987");
 
-        ResponseEntity<String> responseListings = restTemplate.exchange
+        final ResponseEntity<String> responseListings = restTemplate.exchange
                 (builder.toUriString(),HttpMethod.GET,entity,String.class);
 
         // Verify basic assertions
         Assert.assertNotNull(responseListings.getBody());
         Assert.assertFalse(responseListings.getBody().isEmpty());
         Assert.assertEquals(HttpStatus.OK,responseListings.getStatusCode());
-        JSONAssert.assertEquals(readFileAsString(RESP_JSON_PREFIX.concat(SRCH_BY_COLOR_MK_MODEL_YR_RESP_INT_TST)),responseListings.getBody(),JSONCompareMode.LENIENT);
+        JSONAssert.assertEquals(readFileAsString(RESP_JSON_PREFIX.concat(SRCH_BY_COLOR_MK_MODEL_YR_RESP_INT_TST)),
+                responseListings.getBody(),JSONCompareMode.LENIENT);
 
     }
 
@@ -174,17 +168,14 @@ public class ListingControllerIntCsvTest {
         // Create test data.
         uploadCsvAndGetResponseEntity();
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.set(HEADER_ACCEPT, MediaType.APPLICATION_JSON_VALUE);
-
-        HttpEntity<?> entity = new HttpEntity<>(headers);
+        HttpEntity<?> entity = getHttpEntityWithHeaders();
 
         TestRestTemplate restTemplate = new TestRestTemplate();
 
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(ITestUtils.createURLWithPort("/heycar/searchByParam",
+        final UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(ITestUtils.createURLWithPort("/heycar/searchByParam",
                 host,port)).queryParam(COLOR, WHITE)
-                .queryParam("make","Maruti")
-                .queryParam("year","1987");
+                .queryParam(MAKE,"Maruti")
+                .queryParam(YEAR,"1987");
 
         ResponseEntity<String> responseListings = restTemplate.exchange
                 (builder.toUriString(),HttpMethod.GET,entity,String.class);
@@ -203,17 +194,14 @@ public class ListingControllerIntCsvTest {
         // Create test data.
         uploadCsvAndGetResponseEntity();
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.set(HEADER_ACCEPT, MediaType.APPLICATION_JSON_VALUE);
-
-        HttpEntity<?> entity = new HttpEntity<>(headers);
+        HttpEntity<?> entity = getHttpEntityWithHeaders();
 
         TestRestTemplate restTemplate = new TestRestTemplate();
 
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(ITestUtils.createURLWithPort("/heycar/searchByParam",
-                host,port)).queryParam("year","1987");
+        final UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(ITestUtils.createURLWithPort(SRCH_BY_PARAM_URL,
+                host,port)).queryParam(YEAR,"1987");
 
-        ResponseEntity<String> responseListings = restTemplate.exchange
+        final ResponseEntity<String> responseListings = restTemplate.exchange
                 (builder.toUriString(),HttpMethod.GET,entity,String.class);
 
         // Verify basic assertions
@@ -224,10 +212,17 @@ public class ListingControllerIntCsvTest {
 
     }
 
+    private HttpEntity<?> getHttpEntityWithHeaders() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(HEADER_ACCEPT, MediaType.APPLICATION_JSON_VALUE);
+
+        return new HttpEntity<>(headers);
+    }
+
     private HttpHeaders getHttpHeaderCsv(){
 
         httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.valueOf("text/csv"));
+        httpHeaders.setContentType(MediaType.valueOf(MEDIA_TYP_TXT_CSV));
         httpHeaders.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         return httpHeaders;
     }
