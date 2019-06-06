@@ -21,16 +21,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.util.UriComponentsBuilder;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import static com.heycar.platform.constants.ListingTestConstants.*;
 import static com.heycar.platform.constants.VehicleListingConstants.*;
-import static com.heycar.platform.utils.ITestUtils.readFileAsString;
-import static com.heycar.platform.constants.ListingTestConstants.RESP_JSON_PREFIX;
-import static com.heycar.platform.constants.ListingTestConstants.SRCH_BY_COLOR_200RESP_INT_TST;
-import static com.heycar.platform.constants.ListingTestConstants.SRCH_BY_COLOR_MK_MODEL_YR_RESP_INT_TST;
-import static com.heycar.platform.constants.ListingTestConstants.SRCH_BY_COLOR_MK_YR_RESP_INT_TST;
-import static com.heycar.platform.constants.ListingTestConstants.SRCH_BY_YR_RESP_INT_TST;
-import static com.heycar.platform.constants.ListingTestConstants.SRCH_BY_PARAM_URL;
+import static com.heycar.platform.utils.ITestUtils.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
@@ -210,21 +204,6 @@ public class ListingControllerIntCsvTest {
         Assert.assertEquals(HttpStatus.OK,responseListings.getStatusCode());
         JSONAssert.assertEquals(readFileAsString(RESP_JSON_PREFIX.concat(SRCH_BY_YR_RESP_INT_TST)),responseListings.getBody(),JSONCompareMode.LENIENT);
 
-    }
-
-    private HttpEntity<?> getHttpEntityWithHeaders() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set(HEADER_ACCEPT, MediaType.APPLICATION_JSON_VALUE);
-
-        return new HttpEntity<>(headers);
-    }
-
-    private HttpHeaders getHttpHeaderCsv(){
-
-        httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.valueOf(MEDIA_TYP_TXT_CSV));
-        httpHeaders.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-        return httpHeaders;
     }
 
     private ListingList createTestDataForNewVehicleListingPositiveCsv(){

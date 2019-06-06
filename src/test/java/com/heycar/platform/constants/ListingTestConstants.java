@@ -17,6 +17,9 @@ public final class ListingTestConstants {
     /**
      *  JSON response file names
      */
+
+    public static final String LISTING_UPDTD_JSON_RESP_FILE_NM = "JsonRespForUpdateListing.json";
+
     public static final String CODE_MISSING_IN_CSV_RESP_FILE_NM = "JsonRespWhenCodeMissingInCsvReq.json";
 
     public static final String POWER_MISSING_IN_CSV_RESP_FILE_NM = "JsonRespWhenPowerMissingInCsvReq.json";
@@ -42,6 +45,8 @@ public final class ListingTestConstants {
     public static final String CODE_MISSING_IN_JSON_RESP_FILE_NM = "JsonRespWhenCodeMissingInJsonReq.json";
 
     public static final String MAKE_MISSING_IN_JSON_RESP_FILE_NM = "JsonRespWhenMakeMissing.json";
+
+    public static final String PRICE_MISSING_IN_JSON_RESP_FILE_NM = "JsonRespWhenPriceMissingInJsonReq.json";
 
     public static final String MODEL_MISSING_IN_JSON_RESP_FILE_NM = "JsonRespWhenModelAbsentInJson.json";
 

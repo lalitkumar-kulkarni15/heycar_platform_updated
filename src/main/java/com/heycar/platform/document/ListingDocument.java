@@ -15,23 +15,6 @@ import org.springframework.data.elasticsearch.annotations.Document;
 @Document(indexName = "users", type = "user", shards = 1)
 public class ListingDocument {
 
-    public ListingDocument() {
-    }
-
-    public ListingDocument(String dealerIdCode,String dealerId, String code, String make, String model, String kW,
-                           String year, String color, String price) {
-
-        this.dealerIdCode = dealerIdCode;
-        this.dealerId = dealerId;
-        this.code = code;
-        this.make = make;
-        this.model = model;
-        this.kW = kW;
-        this.year = year;
-        this.color = color;
-        this.price = price;
-    }
-
     // A unique combination of the dealer id and code.
     @Id
     private String dealerIdCode;
@@ -46,11 +29,9 @@ public class ListingDocument {
 
     private String kW;
 
-    private String year;
+    public ListingDocument() {
 
-    private String color;
-
-    private String price;
+    }
 
     public String getDealerIdCode() {
         return dealerIdCode;
@@ -60,12 +41,12 @@ public class ListingDocument {
         this.dealerIdCode = dealerIdCode;
     }
 
-    public String getkW() {
-        return kW;
+    public String getDealerId() {
+        return dealerId;
     }
 
-    public void setkW(String kW) {
-        this.kW = kW;
+    public void setDealerId(String dealerId) {
+        this.dealerId = dealerId;
     }
 
     public String getCode() {
@@ -92,6 +73,14 @@ public class ListingDocument {
         this.model = model;
     }
 
+    public String getkW() {
+        return kW;
+    }
+
+    public void setkW(String kW) {
+        this.kW = kW;
+    }
+
     public String getYear() {
         return year;
     }
@@ -112,19 +101,30 @@ public class ListingDocument {
         return price;
     }
 
+    public ListingDocument(String dealerIdCode, String dealerId, String code, String make, String model, String kW,
+                           String year, String color, String price) {
+        this.dealerIdCode = dealerIdCode;
+        this.dealerId = dealerId;
+        this.code = code;
+        this.make = make;
+        this.model = model;
+        this.kW = kW;
+        this.year = year;
+        this.color = color;
+        this.price = price;
+    }
+
     public void setPrice(String price) {
         this.price = price;
     }
 
-    public String getDealerId() {
-        return dealerId;
-    }
+    private String year;
 
-    public void setDealerId(String dealerId) {
-        this.dealerId = dealerId;
-    }
+    private String color;
 
-    public ListingDocument(String dealerId) {
+    private String price;
+
+    /*public ListingDocument(String dealerId) {
         this.dealerId = dealerId;
-    }
+    }*/
 }
