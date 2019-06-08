@@ -119,7 +119,6 @@ public class ListingSvcImpl implements IListingSvc {
                         vendrListng.getColor(),
                         vendrListng.getPrice(),
                         vendrListng.getMake(),
-                        null,
                         vendrListng.getModel(),
                         vendrListng.getkW()
                 )).collect(Collectors.toList());

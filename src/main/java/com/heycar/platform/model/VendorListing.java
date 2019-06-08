@@ -2,23 +2,23 @@ package com.heycar.platform.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.opencsv.bean.CsvBindByName;
+import lombok.*;
 import javax.validation.constraints.NotNull;
-
 import static com.heycar.platform.constants.VehicleListingConstants.FORWARD_SLASH;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@ToString
 public class VendorListing {
 
-    public VendorListing() {
-    }
-
-    public VendorListing(String code, String year, String color, String price, String make, String makeModel,
+    public VendorListing(String code, String year, String color, String price, String make,
                          String model, String kW) {
         this.code = code;
         this.year = year;
         this.color = color;
         this.price = price;
         this.make = make;
-        this.makeModel = makeModel;
         this.model = model;
         this.kW = kW;
     }
@@ -42,6 +42,7 @@ public class VendorListing {
     @NotNull(message = "Make cannot be null")
     private String make;
 
+    @Setter(AccessLevel.NONE)
     @CsvBindByName(column = "make/model",required = true)
     @JsonIgnore
     private String makeModel;
@@ -52,14 +53,6 @@ public class VendorListing {
     @CsvBindByName(column = "power-in-ps",required = true)
     @NotNull(message = "Power cannot be null")
     private String kW;
-
-    public String getCode() {
-        return code;
-    }
-
-    public String getMakeModel() {
-        return makeModel;
-    }
 
     public void setMakeModel(String makeModel) {
 
@@ -74,50 +67,6 @@ public class VendorListing {
         this.makeModel = makeModel;
     }
 
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getYear() {
-        return year;
-    }
-
-    public void setYear(String year) {
-        this.year = year;
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
-    }
-
-    public String getPrice() {
-        return price;
-    }
-
-    public void setPrice(String price) {
-        this.price = price;
-    }
-
-    public String getMake() {
-        return make;
-    }
-
-    public void setMake(String make) {
-        this.make = make;
-    }
-
-    public String getModel() {
-        return model;
-    }
-
-    public void setModel(String model) {
-        this.model = model;
-    }
-
     public String getkW() {
         return kW;
     }
@@ -126,16 +75,4 @@ public class VendorListing {
         this.kW = kW;
     }
 
-    @Override
-    public String toString() {
-        return "VendorListing{" +
-                "code='" + code + '\'' +
-                ", year='" + year + '\'' +
-                ", color='" + color + '\'' +
-                ", price='" + price + '\'' +
-                ", make='" + make + '\'' +
-                ", model='" + model + '\'' +
-                ", kW='" + kW + '\'' +
-                '}';
-    }
 }

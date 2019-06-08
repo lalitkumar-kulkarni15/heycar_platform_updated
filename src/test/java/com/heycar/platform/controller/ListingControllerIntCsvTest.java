@@ -47,7 +47,7 @@ public class ListingControllerIntCsvTest {
     @Value("${application.test.searchByParamUrlCsv}")
     private String searchByParam;
 
-    private HttpHeaders httpHeaders;
+
 
     @Test
     public void uploadListingCsvTestReturns201CreatedForPositiveCsvListing() {
@@ -99,7 +99,8 @@ public class ListingControllerIntCsvTest {
 
     private HttpHeaders getHttpHeaderJson(){
 
-        httpHeaders = new HttpHeaders();
+        HttpHeaders httpHeaders = new HttpHeaders();
+
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         List<MediaType> mediatypeList = new ArrayList<>();
         mediatypeList.add(MediaType.APPLICATION_JSON);

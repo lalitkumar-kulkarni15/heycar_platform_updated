@@ -23,7 +23,7 @@ public interface ITestUtils {
         return new String(Files.readAllBytes(Paths.get(filePath)));
     }
 
-    public static HttpEntity<?> getHttpEntityWithHeaders() {
+    public static HttpEntity getHttpEntityWithHeaders() {
         HttpHeaders headers = new HttpHeaders();
         headers.set(HEADER_ACCEPT, MediaType.APPLICATION_JSON_VALUE);
 

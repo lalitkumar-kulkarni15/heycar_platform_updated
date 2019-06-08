@@ -9,7 +9,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -21,6 +20,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import static com.heycar.platform.constants.ListingTestConstants.*;
 import static com.heycar.platform.constants.VehicleListingConstants.*;
 import static com.heycar.platform.utils.ITestUtils.getHttpEntityWithHeaders;
@@ -32,8 +32,7 @@ import static com.heycar.platform.utils.ITestUtils.readFileAsString;
 @TestPropertySource(locations = "classpath:application-test-json.properties")
 public class ListingControllerIntJsonTest {
 
-    @Autowired
-    private TestRestTemplate restTemplate;
+
 
     @Value("${server.port}")
     private String port;
@@ -64,6 +63,8 @@ public class ListingControllerIntJsonTest {
          *          service and get the response back which contains the http status code and the uri of the resources
          *          created.
          */
+
+         TestRestTemplate restTemplate = new TestRestTemplate();
          ResponseEntity response = restTemplate.exchange(ITestUtils.createURLWithPort(postUrlJson,
                                    host,port ),HttpMethod.POST,listingDocEnt, String.class);
 
@@ -93,6 +94,7 @@ public class ListingControllerIntJsonTest {
          *          service and get the response back which contains the http status code and the uri of the resources
          *          created.
          */
+        TestRestTemplate restTemplate = new TestRestTemplate();
         ResponseEntity response = restTemplate.exchange(ITestUtils.createURLWithPort(postUrlJson,
                 host,port ),HttpMethod.POST,listingDocEnt, String.class);
 
@@ -152,13 +154,14 @@ public class ListingControllerIntJsonTest {
         HttpEntity<List<VendorListing>> listingDocEnt = new HttpEntity<>(createTestDataForNewVehicleListingPositive(),
                 getHttpHeaderJson());
 
-        ResponseEntity<String> response = restTemplate.exchange(ITestUtils.createURLWithPort(postUrlJson,
+        TestRestTemplate restTemplate = new TestRestTemplate();
+        restTemplate.exchange(ITestUtils.createURLWithPort(postUrlJson,
                 host,port ),HttpMethod.POST,listingDocEnt, String.class);
 
         HttpEntity<List<VendorListing>> listingDocEntUpdated = new HttpEntity<>(createTestDataForNewVehicleListingUpdated(),
                 getHttpHeaderJson());
 
-        ResponseEntity<String> responseUpdated = restTemplate.exchange(ITestUtils.createURLWithPort(postUrlJson,
+        restTemplate.exchange(ITestUtils.createURLWithPort(postUrlJson,
                 host,port ),HttpMethod.POST,listingDocEntUpdated, String.class);
 
         final ResponseEntity<String> responseListings = srchStringResponseEntityOfUpdtdListng();
@@ -190,6 +193,7 @@ public class ListingControllerIntJsonTest {
         HttpEntity<List<VendorListing>> listingDocEnt = new HttpEntity<>(createTestDataForNewVehicleListingMissingCode(),
                                                         getHttpHeaderJson());
 
+        TestRestTemplate restTemplate = new TestRestTemplate();
         ResponseEntity<String> response = restTemplate.exchange(ITestUtils.createURLWithPort(postUrlJson,
                 host,port ),HttpMethod.POST,listingDocEnt, String.class);
 
@@ -225,6 +229,7 @@ public class ListingControllerIntJsonTest {
          *          service and get the response back which contains the http status code and the uri of the resources
          *          created.
          */
+        TestRestTemplate restTemplate = new TestRestTemplate();
         ResponseEntity<String> response = restTemplate.exchange(ITestUtils.createURLWithPort(postUrlJson,
                 host,port ),HttpMethod.POST,listingDocEnt, String.class);
 
@@ -261,6 +266,7 @@ public class ListingControllerIntJsonTest {
          *          service and get the response back which contains the http status code and the uri of the resources
          *          created.
          */
+        TestRestTemplate restTemplate = new TestRestTemplate();
         ResponseEntity<String> response = restTemplate.exchange(ITestUtils.createURLWithPort(postUrlJson,
                 host,port ),HttpMethod.POST,listingDocEnt, String.class);
 
@@ -297,6 +303,7 @@ public class ListingControllerIntJsonTest {
          *          service and get the response back which contains the http status code and the uri of the resources
          *          created.
          */
+        TestRestTemplate restTemplate = new TestRestTemplate();
         ResponseEntity<String> response = restTemplate.exchange(ITestUtils.createURLWithPort(postUrlJson,
                 host,port ),HttpMethod.POST,listingDocEnt, String.class);
 
@@ -333,6 +340,7 @@ public class ListingControllerIntJsonTest {
          *          service and get the response back which contains the http status code and the uri of the resources
          *          created.
          */
+        TestRestTemplate restTemplate = new TestRestTemplate();
         ResponseEntity<String> response = restTemplate.exchange(ITestUtils.createURLWithPort(postUrlJson,
                 host,port ),HttpMethod.POST,listingDocEnt, String.class);
 
@@ -369,6 +377,7 @@ public class ListingControllerIntJsonTest {
          *          service and get the response back which contains the http status code and the uri of the resources
          *          created.
          */
+        TestRestTemplate restTemplate = new TestRestTemplate();
         ResponseEntity<String> response = restTemplate.exchange(ITestUtils.createURLWithPort(postUrlJson,
                 host,port ),HttpMethod.POST,listingDocEnt, String.class);
 
@@ -399,6 +408,7 @@ public class ListingControllerIntJsonTest {
         HttpEntity<List<VendorListing>> listingDocEnt = new HttpEntity<>(createTestDataForNewVehicleListingMissingPrice(),
                 getHttpHeaderJson());
 
+        TestRestTemplate restTemplate = new TestRestTemplate();
         ResponseEntity<String> response = restTemplate.exchange(ITestUtils.createURLWithPort(postUrlJson,
                 host,port ),HttpMethod.POST,listingDocEnt, String.class);
 
