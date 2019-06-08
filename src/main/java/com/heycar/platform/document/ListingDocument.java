@@ -5,9 +5,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 /**
- * <p>
- *  This is the elastic search document to hold the vehicle listings properties.
- * </p>
+ *<p>
+ * This is the elastic search document to hold the vehicle listings properties.
+ *</p>
  *
  * @since   01-06-2019
  * @author  Lalitkumar Kulkarni
@@ -17,6 +17,7 @@ import org.springframework.data.elasticsearch.annotations.Document;
 @AllArgsConstructor
 @Setter
 @Getter
+@Builder
 @Document(indexName = "users", type = "user", shards = 1)
 public class ListingDocument {
 
@@ -32,14 +33,6 @@ public class ListingDocument {
 
     private String model;
 
-    public String getkW() {
-        return kW;
-    }
-
-    public void setkW(String kW) {
-        this.kW = kW;
-    }
-
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     private String kW;
@@ -49,5 +42,13 @@ public class ListingDocument {
     private String color;
 
     private String price;
+
+    public String getkW() {
+        return kW;
+    }
+
+    public void setkW(String kW) {
+        this.kW = kW;
+    }
 
 }

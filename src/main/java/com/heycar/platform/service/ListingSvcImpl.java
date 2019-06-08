@@ -68,14 +68,18 @@ public class ListingSvcImpl implements IListingSvc {
 
     private List<ListingDocument> mapListingDocumentRequest(final String dealerId, final List<VendorListing> listing) {
 
-        return listing.stream().map(listng -> new ListingDocument(dealerId.concat(listng.getCode())
-                                              ,dealerId,listng.getCode(),
-                                              listng.getMake(),
-                                              listng.getModel(),
-                                              listng.getkW(),
-                                              listng.getYear(),
-                                              listng.getColor(),
-                                              listng.getPrice())).collect(Collectors.toList());
+        return listing.stream().map(listng -> ListingDocument.builder()
+                                              .dealerIdCode(dealerId.concat(listng.getCode()))
+                                              .dealerId(dealerId)
+                                              .code(listng.getCode())
+                                              .make(listng.getMake())
+                                              .model(listng.getModel())
+                                              .kW(listng.getkW())
+                                              .year(listng.getYear())
+                                              .color(listng.getColor())
+                                              .price(listng.getPrice())
+                                              .build()).collect(Collectors.toList());
+
     }
 
     /**
@@ -113,15 +117,17 @@ public class ListingSvcImpl implements IListingSvc {
     }
 
     private List<VendorListing> getVendorListingList(List<ListingDocument> listingDoc) {
-        return listingDoc.stream().map(vendrListng -> new VendorListing(
-                        vendrListng.getCode(),
-                        vendrListng.getYear(),
-                        vendrListng.getColor(),
-                        vendrListng.getPrice(),
-                        vendrListng.getMake(),
-                        vendrListng.getModel(),
-                        vendrListng.getkW()
-                )).collect(Collectors.toList());
+
+        return listingDoc.stream().map(vendorListing -> VendorListing.builder()
+                                                      .code(vendorListing.getCode())
+                                                      .year(vendorListing.getYear())
+                                                      .color(vendorListing.getColor())
+                                                      .price(vendorListing.getPrice())
+                                                      .make(vendorListing.getMake())
+                                                      .model(vendorListing.getModel())
+                                                      .kW(vendorListing.getkW())
+                                                      .build()).collect(Collectors.toList());
+
     }
 
     /**

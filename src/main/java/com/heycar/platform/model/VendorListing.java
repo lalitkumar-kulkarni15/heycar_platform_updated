@@ -9,19 +9,10 @@ import static com.heycar.platform.constants.VehicleListingConstants.FORWARD_SLAS
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString
+@Builder
 public class VendorListing {
-
-    public VendorListing(String code, String year, String color, String price, String make,
-                         String model, String kW) {
-        this.code = code;
-        this.year = year;
-        this.color = color;
-        this.price = price;
-        this.make = make;
-        this.model = model;
-        this.kW = kW;
-    }
 
     @NotNull(message = "Code cannot be null")
     @CsvBindByName(column = "code",required = true)
