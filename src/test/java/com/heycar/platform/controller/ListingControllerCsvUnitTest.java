@@ -73,15 +73,17 @@ public class ListingControllerCsvUnitTest {
     }
 
     private List<ListingDocument> getListingDocumentsCsv() {
+
         List<ListingDocument> listingDocLst = new ArrayList<>();
-        ListingDocument listingDoc = new ListingDocument();
-        listingDoc.setModel("Hyundai");
-        listingDoc.setMake("Verna");
-        listingDoc.setkW("1200");
-        listingDoc.setCode("va");
-        listingDoc.setPrice("123");
-        listingDoc.setYear("1989");
-        listingDocLst.add(listingDoc);
+        ListingDocument listingDocument = ListingDocument.builder()
+                                          .model("Hyundai")
+                                          .make("Verna")
+                                          .kW("1200")
+                                          .code("va")
+                                          .price("123")
+                                          .year("1989").build();
+
+        listingDocLst.add(listingDocument);
         return listingDocLst;
     }
 

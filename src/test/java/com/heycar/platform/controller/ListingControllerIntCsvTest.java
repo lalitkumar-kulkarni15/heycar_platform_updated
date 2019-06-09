@@ -209,18 +209,20 @@ public class ListingControllerIntCsvTest {
 
     private ListingList createTestDataForNewVehicleListingPositiveCsv(){
 
-        VendorListing vendorListing = new VendorListing();
-        vendorListing.setYear("1987");
-        vendorListing.setCode("adp");
-        vendorListing.setColor("White");
-        vendorListing.setkW("2000");
-        vendorListing.setMakeModel("Maruti/Swift");
-        vendorListing.setPrice("269 $");
+        VendorListing vendorListing = VendorListing.builder()
+                                      .year("1987")
+                                      .code("adp")
+                                      .color("White")
+                                      .kW("2000")
+                                      .makeModel("Maruti/Swift")
+                                      .price("269 $").build();
+
         List<VendorListing> listingDocList = new ArrayList<>();
         listingDocList.add(vendorListing);
         ListingList listingList = new ListingList();
         listingList.setList(listingDocList);
         return listingList;
+
     }
 
 }

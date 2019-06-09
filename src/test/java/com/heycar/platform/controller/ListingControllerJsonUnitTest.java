@@ -69,7 +69,7 @@ public class ListingControllerJsonUnitTest {
     public void searchListingByParamsTestReturns200OkWithListingData() throws Exception {
 
         when(listingSvc.searchListing(Mockito.any())).thenReturn(getVendorListingLst());
-        final RequestBuilder requestBuilder = MockMvcRequestBuilders.get(srchByParamUrl+"color=Blue").accept(
+        final RequestBuilder requestBuilder = MockMvcRequestBuilders.get(srchByParamUrl + "color=Blue").accept(
                 MediaType.APPLICATION_JSON);
 
         final MvcResult result = mockMvc.perform(requestBuilder).andReturn();
@@ -77,8 +77,8 @@ public class ListingControllerJsonUnitTest {
         Assert.assertNotNull(response);
         Assert.assertEquals(HttpStatus.OK.value(), response.getStatus());
         JSONAssert.assertEquals(readFileAsString(RESP_JSON_PREFIX.concat(POSITIVE_JSON_RESP_FILE_NM_FR_SRCH_BY_PARAMS)),
-                                                response.getContentAsString(),
-                                                JSONCompareMode.LENIENT);
+                response.getContentAsString(),
+                JSONCompareMode.LENIENT);
     }
 
     @Test
@@ -95,15 +95,17 @@ public class ListingControllerJsonUnitTest {
                 response.getContentAsString(), JSONCompareMode.LENIENT);
     }
 
-    private List<VendorListing> getVendorListingLst(){
+    private List<VendorListing> getVendorListingLst() {
 
-        VendorListing vendorListing = new VendorListing();
-        vendorListing.setYear("1989");
-        vendorListing.setModel("Mercedes");
-        vendorListing.setMake("X1");
-        vendorListing.setColor("Blue");
-        vendorListing.setPrice("200");
-        vendorListing.setkW("4000");
+        VendorListing vendorListing = VendorListing.builder()
+                .year("1989")
+                .model("Mercedes")
+                .make("X1")
+                .color("Blue")
+                .price("200")
+                .kW("4000")
+                .build();
+
         List<VendorListing> vendorListingLst = new ArrayList<>();
         vendorListingLst.add(vendorListing);
         return vendorListingLst;
@@ -112,7 +114,7 @@ public class ListingControllerJsonUnitTest {
     @Test
     public void uploadListingJsonTestReturns201Created() throws Exception {
 
-        when(listingSvc.addListingInDataStore(Mockito.anyString(),Mockito.any())).thenReturn(getListingDocuments());
+        when(listingSvc.addListingInDataStore(Mockito.anyString(), Mockito.any())).thenReturn(getListingDocuments());
         final RequestBuilder requestBuilder = getRequestBuilderForPostListingJson();
         final MvcResult result = mockMvc.perform(requestBuilder).andReturn();
         final MockHttpServletResponse response = result.getResponse();
@@ -128,14 +130,17 @@ public class ListingControllerJsonUnitTest {
     }
 
     private List<ListingDocument> getListingDocuments() {
+
+        ListingDocument listingDoc = ListingDocument.builder()
+                .model("Mercedes")
+                .make("X1")
+                .kW("4000")
+                .code("va")
+                .price("200")
+                .year("1989")
+                .build();
+
         List<ListingDocument> listingDocLst = new ArrayList<>();
-        ListingDocument listingDoc = new ListingDocument();
-        listingDoc.setModel("Mercedez");
-        listingDoc.setMake("Benz");
-        listingDoc.setkW("1200");
-        listingDoc.setCode("va");
-        listingDoc.setPrice("123");
-        listingDoc.setYear("1989");
         listingDocLst.add(listingDoc);
         return listingDocLst;
     }
@@ -143,13 +148,13 @@ public class ListingControllerJsonUnitTest {
     @Test
     public void uploadListingJsonTestRet400BadReqWhenColorAbsent() throws Exception {
 
-        when(listingSvc.addListingInDataStore(Mockito.anyString(),Mockito.any())).thenReturn(getListingDocuments());
+        when(listingSvc.addListingInDataStore(Mockito.anyString(), Mockito.any())).thenReturn(getListingDocuments());
         final RequestBuilder requestBuilder = getRequestBuilderForPostListingJsonColorMissing();
         final MvcResult result = mockMvc.perform(requestBuilder).andReturn();
         final MockHttpServletResponse response = result.getResponse();
         Assert.assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
         JSONAssert.assertEquals(readFileAsString(RESP_JSON_PREFIX.concat(COLOR_MISSING_IN_JSON_RESP_FILE_NM))
-                ,response.getContentAsString(),JSONCompareMode.LENIENT);
+                , response.getContentAsString(), JSONCompareMode.LENIENT);
     }
 
     private RequestBuilder getRequestBuilderForPostListingJsonColorMissing() throws IOException {
@@ -162,13 +167,13 @@ public class ListingControllerJsonUnitTest {
     @Test
     public void uploadListingJsonTestRet400BadReqWhenCodeAbsent() throws Exception {
 
-        when(listingSvc.addListingInDataStore(Mockito.anyString(),Mockito.any())).thenReturn(getListingDocuments());
+        when(listingSvc.addListingInDataStore(Mockito.anyString(), Mockito.any())).thenReturn(getListingDocuments());
         final RequestBuilder requestBuilder = getRequestBuilderForPostListingJsonCodeMissing();
         final MvcResult result = mockMvc.perform(requestBuilder).andReturn();
         final MockHttpServletResponse response = result.getResponse();
         Assert.assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
         JSONAssert.assertEquals(readFileAsString(RESP_JSON_PREFIX.concat(CODE_MISSING_IN_JSON_RESP_FILE_NM))
-                ,response.getContentAsString(),JSONCompareMode.LENIENT);
+                , response.getContentAsString(), JSONCompareMode.LENIENT);
     }
 
     private RequestBuilder getRequestBuilderForPostListingJsonCodeMissing() throws IOException {
@@ -181,13 +186,13 @@ public class ListingControllerJsonUnitTest {
     @Test
     public void uploadListingJsonTestRet400BadReqWhenMakeAbsent() throws Exception {
 
-        when(listingSvc.addListingInDataStore(Mockito.anyString(),Mockito.any())).thenReturn(getListingDocuments());
+        when(listingSvc.addListingInDataStore(Mockito.anyString(), Mockito.any())).thenReturn(getListingDocuments());
         final RequestBuilder requestBuilder = getRequestBuilderForPostListingJsonMakeMissing();
         final MvcResult result = mockMvc.perform(requestBuilder).andReturn();
         final MockHttpServletResponse response = result.getResponse();
         Assert.assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
         JSONAssert.assertEquals(readFileAsString(RESP_JSON_PREFIX.concat(MAKE_MISSING_IN_JSON_RESP_FILE_NM))
-                ,response.getContentAsString(),JSONCompareMode.LENIENT);
+                , response.getContentAsString(), JSONCompareMode.LENIENT);
 
     }
 
@@ -201,13 +206,13 @@ public class ListingControllerJsonUnitTest {
     @Test
     public void uploadListingJsonTestRet400BadReqWhenModelAbsent() throws Exception {
 
-        when(listingSvc.addListingInDataStore(Mockito.anyString(),Mockito.any())).thenReturn(getListingDocuments());
+        when(listingSvc.addListingInDataStore(Mockito.anyString(), Mockito.any())).thenReturn(getListingDocuments());
         final RequestBuilder requestBuilder = getRequestBuilderForPostListingJsonModelMissing();
         final MvcResult result = mockMvc.perform(requestBuilder).andReturn();
         final MockHttpServletResponse response = result.getResponse();
         Assert.assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
         JSONAssert.assertEquals(readFileAsString(RESP_JSON_PREFIX.concat(MODEL_MISSING_IN_JSON_RESP_FILE_NM))
-                ,response.getContentAsString(),JSONCompareMode.LENIENT);
+                , response.getContentAsString(), JSONCompareMode.LENIENT);
 
     }
 
@@ -221,13 +226,13 @@ public class ListingControllerJsonUnitTest {
     @Test
     public void uploadListingJsonTestRet400BadReqWhenPowerAbsent() throws Exception {
 
-        when(listingSvc.addListingInDataStore(Mockito.anyString(),Mockito.any())).thenReturn(getListingDocuments());
+        when(listingSvc.addListingInDataStore(Mockito.anyString(), Mockito.any())).thenReturn(getListingDocuments());
         final RequestBuilder requestBuilder = getRequestBuilderForPostListingJsonPowerMissing();
         final MvcResult result = mockMvc.perform(requestBuilder).andReturn();
         final MockHttpServletResponse response = result.getResponse();
         Assert.assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
         JSONAssert.assertEquals(readFileAsString(RESP_JSON_PREFIX.concat(POWER_MISSING_IN_JSON_RESP_FILE_NM))
-                ,response.getContentAsString(),JSONCompareMode.LENIENT);
+                , response.getContentAsString(), JSONCompareMode.LENIENT);
     }
 
     private RequestBuilder getRequestBuilderForPostListingJsonPowerMissing() throws IOException {
@@ -241,13 +246,13 @@ public class ListingControllerJsonUnitTest {
     @Test
     public void uploadListingJsonTestRet400BadReqWhenYearAbsent() throws Exception {
 
-        when(listingSvc.addListingInDataStore(Mockito.anyString(),Mockito.any())).thenReturn(getListingDocuments());
+        when(listingSvc.addListingInDataStore(Mockito.anyString(), Mockito.any())).thenReturn(getListingDocuments());
         final RequestBuilder requestBuilder = getRequestBuilderForPostListingJsonYearMissing();
         final MvcResult result = mockMvc.perform(requestBuilder).andReturn();
         final MockHttpServletResponse response = result.getResponse();
         Assert.assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
         JSONAssert.assertEquals(readFileAsString(RESP_JSON_PREFIX.concat(YEAR_MISSING_IN_JSON_RESP_FILE_NM))
-                ,response.getContentAsString(),JSONCompareMode.LENIENT);
+                , response.getContentAsString(), JSONCompareMode.LENIENT);
     }
 
     private RequestBuilder getRequestBuilderForPostListingJsonYearMissing() throws IOException {
