@@ -164,7 +164,7 @@ public class ListingController {
         return ResponseEntity.ok(listingDoc);
     }
 
-    private VendorListing mapVendorListingReq(@RequestParam Map<String, String> allParams) {
+    private VendorListing mapVendorListingReq(Map<String, String> allParams) {
         VendorListing vendorListing = new VendorListing();
         vendorListing.setColor(allParams.get(COLOR));
         vendorListing.setMake(allParams.get(MAKE));
